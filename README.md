@@ -47,6 +47,8 @@ Performs any number of transformations in the order listed on the command line. 
 Future commands
 ---------------
 
+These are ideas for future commands that may make it into the stl_cmd suite.
+
 ### stl_cube 
 
     Generate an STL file with a single cube in it.
@@ -63,12 +65,27 @@ Future commands
 
     Generate an STL file with a single cone in it.
 
+### stl_boolean 
+
+    Combine two STL files using boolean operations.
+
+### stl_twist
+
+    Deform an STL file by twisting it.
+
+### stl_bend
+
+    Deform an STL file by bending it.
+
+### stl_noise
+
+    Deform an STL file by displacing vertices using noise.
+
 Teaching
 --------
 
-The goal of this project is to be a resource for teaching terminal usage and some basic programming concepts in the 3D printing space. Imagine an assignment which involves building a brick wall. Students would need to use a combination of stl_cube, stl_transform and stl_merge. The commands could be combined in a bash or <insert favorite scripting language> script with for and while loops, could accept input and use conditionals to affect the behavior of the wall. 
+The goal of this project is to be a resource for teaching terminal usage and some basic programming concepts in the 3D printing space. Imagine an assignment which involves building a brick wall. Students would need to use a combination of stl_cube, stl_transform and stl_merge. The commands could be combined in a bash or &lt;insert favorite scripting language&gt; script with for and while loops, could accept input and use conditionals to affect the attributes of the wall. 
 
-As more commands are added more creative assignments are possible. I hope to grow the suite of commands included in stl_cmd with that goal in mind.
-
+The terminal is an important tool to learn when programming, but can be boring to learn when just making text based programs. stl_cmd aims to make the intro level terminal usage and programming more interesting by creating 3D printable models. As more commands are added more creative assignments are possible. I hope to grow the suite of commands included in stl_cmd with that goal in mind. 
 
 Copyright 2014 Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
