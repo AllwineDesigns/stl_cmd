@@ -10,6 +10,8 @@ Getting started
     cd stl_cmd
     make
 
+The stl_cmds will be compiled and placed in the bin/ directory in the root of the stl_cmd repo. Add it to your path and you can perform the following commands.
+
 STL Commands
 ------------
 
