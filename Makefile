@@ -1,16 +1,17 @@
-all: bin/stl_header bin/stl_merge bin/stl_transform
+BIN_DIR := bin
+CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox)
+CC := gcc
+CFLAGS=-O3
 
-bin:
-	mkdir bin
+all: $(CMDS)
 
-bin/stl_header: src/stl_header.c src/stl_util.h bin
-	gcc src/stl_header.c -o bin/stl_header
+$(BIN_DIR)/%: src/%.c src/stl_util.h
+	$(CC) $(CFLAGS) $(OUTPUT_OPTION) $<
 
-bin/stl_merge: src/stl_merge.c src/stl_util.h bin
-	gcc src/stl_merge.c -o bin/stl_merge
+$(CMDS): | $(BIN_DIR)
 
-bin/stl_transform: src/stl_transform.c src/stl_util.h bin
-	gcc src/stl_transform.c -o bin/stl_transform
+$(BIN_DIR):
+	mkdir $(BIN_DIR)
 
 clean:
-	rm -rf bin
+	rm -rf $(BIN_DIR)

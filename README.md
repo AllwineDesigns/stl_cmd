@@ -23,6 +23,18 @@ This list is rather short for now, but hopefully will grow over time.
 
 Prints or sets the data in the header section of a binary STL file. The header section is rarely used, but can store a small amount of data (80 characters). Copyright info or a very brief description are some possibilities.
 
+### stl_count
+
+    stl_count <input file>
+
+Prints the number of triangles in the in the provided binary STL file.
+
+### stl_bbox
+
+    stl_bbox <input file>
+
+Prints bounding box information of the provided binary STL file.
+
 ### stl_merge
 
     stl_merge -o <output file> <input file1> <input file2>
