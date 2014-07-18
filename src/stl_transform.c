@@ -647,7 +647,7 @@ void mat_copy(mat *m1, mat *out) {
 
 void print_usage() {
     fprintf(stderr, "usage: stl_transform [[ <transformation> ] ...] <input file> <output file>\n");
-    fprintf(stderr, "    Performs any number of the follow transformations in\n");
+    fprintf(stderr, "    Performs any number of the following transformations in\n");
     fprintf(stderr, "    the order they are listed on the command line:\n");
     fprintf(stderr, "        -rx <angle> - rotates <angle> degrees about the x-axis\n");
     fprintf(stderr, "        -ry <angle> - rotates <angle> degrees about the y-axis\n");
