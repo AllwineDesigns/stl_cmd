@@ -1,7 +1,7 @@
 stl_cmd
 =======
 
-The goal of each stl_cmd is to provide a simple command line interface for manipulating binary STL files. stl_cmd aims to be easy to set up, fast and geared towards teaching basic terminal usage and programming skills in the 3D printing space.
+The goal of each stl_cmd is to provide a simple command line interface for manipulating binary STL files. stl_cmd aims to be easy to set up, and is geared towards teaching basic terminal usage and programming skills in the 3D printing space.
 
 Getting started
 ---------------
@@ -34,6 +34,12 @@ Prints the number of triangles in the provided binary STL file.
     stl_bbox <input file>
 
 Prints bounding box information about the provided binary STL file.
+
+### stl_empty
+
+    stl_empty <output file>
+
+Outputs an empty binary STL file. Can be useful to initialize an empty STL file when merging several files together.
 
 ### stl_cube
 

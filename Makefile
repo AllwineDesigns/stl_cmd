@@ -1,5 +1,5 @@
 BIN_DIR := bin
-CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube)
+CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube stl_empty)
 CC := gcc
 CFLAGS=-O3
 
