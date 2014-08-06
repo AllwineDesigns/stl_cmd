@@ -39,7 +39,7 @@ Prints bounding box information about the provided binary STL file.
 
     stl_cube [ -w <width> ] <output file>
 
-Outputs an stl file of a cube with the provided width.
+Outputs a binary STL file of a cube with the provided width.
 
 ### stl_merge
 
@@ -68,10 +68,6 @@ Future commands
 ---------------
 
 These are ideas for future commands that may make it into the stl_cmd suite.
-
-### stl_cube 
-
-    Generate an STL file with a single cube in it.
 
 ### stl_sphere 
 
