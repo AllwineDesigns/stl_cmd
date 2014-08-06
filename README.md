@@ -27,13 +27,19 @@ Prints or sets the data in the header section of a binary STL file. The header s
 
     stl_count <input file>
 
-Prints the number of triangles in the in the provided binary STL file.
+Prints the number of triangles in the provided binary STL file.
 
 ### stl_bbox
 
     stl_bbox <input file>
 
-Prints bounding box information of the provided binary STL file.
+Prints bounding box information about the provided binary STL file.
+
+### stl_cube
+
+    stl_cube [ -w <width> ] <output file>
+
+Outputs an stl file of a cube with the provided width.
 
 ### stl_merge
 

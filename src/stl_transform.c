@@ -238,7 +238,7 @@ int main(int argc, char** argv) {
     fwrite(header, 80, 1, outf);
     fwrite(&num_tris, 4, 1, outf);
 
-    uint16_t abc; // attribute byte count 
+    uint16_t abc = 0; // attribute byte count 
 
     vec tmp_vec;
     vec normal;
