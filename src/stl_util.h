@@ -18,8 +18,13 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+
+#ifndef ___STL_UTIL_H___
+
 #include <sys/stat.h>
 #include <math.h>
+
+#define EPSILON 0.00001f
 
 int is_valid_binary_stl(char* filename) {
     FILE *f;
@@ -49,8 +54,6 @@ int is_valid_binary_stl(char* filename) {
 
     return 1;
 }
-
-#define PI 3.141592653589793
 
 typedef struct {
     float xx;
@@ -196,7 +199,7 @@ void init_sz_mat(mat *m, float s) {
 }
 
 void init_rx_mat(mat *m, float angle) {
-    angle *= PI/180; // convert to radians
+    angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
     float sina = sin(angle);
@@ -223,7 +226,7 @@ void init_rx_mat(mat *m, float angle) {
 }
 
 void init_ry_mat(mat *m, float angle) {
-    angle *= PI/180; // convert to radians
+    angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
     float sina = sin(angle);
@@ -250,7 +253,7 @@ void init_ry_mat(mat *m, float angle) {
 }
 
 void init_rz_mat(mat *m, float angle) {
-    angle *= PI/180; // convert to radians
+    angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
     float sina = sin(angle);
@@ -431,7 +434,7 @@ void init_inv_sz_mat(mat *m, float s) {
 }
 
 void init_inv_rx_mat(mat *m, float angle) {
-    angle *= PI/180; // convert to radians
+    angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
     float sina = sin(angle);
@@ -458,7 +461,7 @@ void init_inv_rx_mat(mat *m, float angle) {
 }
 
 void init_inv_ry_mat(mat *m, float angle) {
-    angle *= PI/180; // convert to radians
+    angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
     float sina = sin(angle);
@@ -485,7 +488,7 @@ void init_inv_ry_mat(mat *m, float angle) {
 }
 
 void init_inv_rz_mat(mat *m, float angle) {
-    angle *= PI/180; // convert to radians
+    angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
     float sina = sin(angle);
@@ -639,6 +642,18 @@ void vec_normalize(vec *v, vec *out) {
     out->z = v->z*invmag;
 }
 
+int vec_equals(vec *v, vec *v2) {
+    return fabs(v->x-v2->x) < EPSILON &&
+           fabs(v->y-v2->y) < EPSILON &&
+           fabs(v->z-v2->z) < EPSILON;
+}
+
+int vec_equals_exact(vec *v, vec *v2) {
+    return v->x-v2->x == 0 &&
+           v->y-v2->y == 0 &&
+           v->z-v2->z == 0;
+}
+
 void vec_copy(vec *v, vec *out) {
     out->x = v->x;
     out->y = v->y;
@@ -667,3 +682,21 @@ void mat_copy(mat *m1, mat *out) {
     out->tz = m1->tz;
     out->tw = m1->tw;
 }
+
+void vec_cross(vec *a, vec *b, vec *out) {
+    out->x = a->y*b->z-a->z*b->y;
+    out->y = a->z*b->x-a->x*b->z;
+    out->z = a->x*b->y-a->y*b->x;
+}
+
+void vec_sub(vec *a, vec *b, vec *out) {
+    out->x = a->x-b->x;
+    out->y = a->y-b->y;
+    out->z = a->z-b->z;
+}
+
+float vec_dot(vec *a, vec *b) {
+    return a->x*b->x+a->y*b->y+a->z*b->z;
+}
+
+#endif
