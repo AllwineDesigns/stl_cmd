@@ -27,8 +27,25 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include "stl_util.h"
 
 void print_usage() {
-    fprintf(stderr, "usage: stl_threads <output file>\n");
-    fprintf(stderr, "    Outputs an stl file with a male or female screw threads per the ISO standard (http://en.wikipedia.org/wiki/ISO_metric_screw_thread). ");
+    fprintf(stderr, "usage: stl_threads [ -f ] [ -D <diameter> ] [ -P <pitch> ] [ -a <angle> ]\n"
+                    "                   [ -h <height> ] [ -s <segments> ] <output file>\n");
+    fprintf(stderr, "    Outputs an stl file with male or female screw threads per the ISO metric \n"
+                    "    screw thread standard (http://en.wikipedia.org/wiki/ISO_metric_screw_thread).\n"
+                    "\n"
+                    "    -f - Outputs female threads (defaults to male).\n"
+                    "    -D <diameter> - Changes to major diameter of the threads.\n"
+                    "    -P <pitch> - Changes the height of a single thread, aka the pitch per the\n"
+                    "                 ISO metric standard.\n"
+                    "    -h <height> - Changes the total height of the threads.\n"
+                    "    -a <angle> - Changes the thread angle (degrees). The standard (and default)\n"
+                    "                 is 60 degrees. For 3D printing this can cause overhang issues \n"
+                    "                 as 60 degrees results in a 30 degree angle with the ground\n"
+                    "                 plane. Setting to 90 degrees results in a 45 degree angle with\n"
+                    "                 the ground plane.\n"
+                    "    -s <segments> - Changes the resolution of the generated STL file. More\n"
+                    "                    segments yields finer resolution. <segments> is the number\n"
+                    "                    of segments to approximate a circle. Defaults to 72 (every\n"
+                    "                    5 degrees).");
 }
 
 void print_normal(vec *p1, vec *p2, vec *p3, int rev) {
@@ -372,18 +389,60 @@ int write_sliced_tri(FILE *f,
     }
 
 
-    printf("shouldn't get here\n");
     *tris = 0;
     return 0;
 }
 
 int main(int argc, char** argv) {
-    if(argc != 2) {
+    int c;
+    int errflg = 0;
+
+    int male = 1;
+    float D = 9.0;        // default value, can be changed as a command line argument
+    float P = 2;          // default value, can be changed as a command line argument
+    float theta = M_PI/3; // 60 degrees, the standard, can be changed as a command line argument
+
+    float screwHeight = 20; // height of entire screw (without a head)
+                            // TODO maybe add ability to add a head
+
+    int segments = 72; // number of segments to approximate a circle, 
+                        // higher the number, higher the resolution 
+                        // (and file size) of the stl file
+
+    while((c = getopt(argc, argv, "fP:D:a:h:s:")) != -1) {
+        switch(c) {
+            case 'f':
+                male = 0;
+                break;
+            case 'P':
+                P = atof(optarg);
+                break;
+            case 'D':
+                D = atof(optarg);
+                break;
+            case 'a':
+                theta = atof(optarg)*M_PI/180;
+                break;
+            case 'h':
+                screwHeight = atof(optarg);
+                break;
+            case 's':
+                segments = atoi(optarg);
+                break;
+            case '?':
+                fprintf(stderr, "Unrecognized option: '-%c'\n", optopt);
+                errflg++;
+                break;
+        }
+    }
+
+    if(errflg || optind >= argc) {
         print_usage();
         exit(2);
     }
 
-    char *file = argv[1];
+    char *file = argv[optind];
+
     FILE *outf;
 
     outf = fopen(file, "wb");
@@ -413,9 +472,7 @@ int main(int argc, char** argv) {
     // theta to change, for ease of manufacturing. Certain 3D printers
     // may not be able to print without drooping at 60 degrees.
 
-    float D = 8;         // default value, can be changed as a command line argument
-    float P = 2;          // default value, can be changed as a command line argument
-    float theta = M_PI/3; // 60 degrees, the standard, can be changed as a command line argument
+    int female = !male;
 
     // equations vary from wikipedia because we're not assuming a 60 degree theta
     // and we're allowing cutting off different amounts than H/8
@@ -431,23 +488,10 @@ int main(int argc, char** argv) {
     float Ptip = 2*Htip*tantheta_2;
     float Ptrough = 2*Htrough*tantheta_2;
 
-    printf("Ptrough: %f\n", Ptrough);
-    printf("Ptip: %f\n", Ptip);
-    printf("Pdiff: %f\n", Pdiff);
-
     float Dmin = D-2*Hdiff;
     float Dmin_2 = Dmin/2;
     float D_2 = D/2;
     float fD = D_2+1;
-
-    float screwHeight = 14.255;
-
-    int male = 1;
-    int female = !male;
-
-    int segments = 72; // number of segments to approximate a circle, 
-                        // higher the number, higher the resolution 
-                        // (and file size) of the stl file
 
 
     /*
@@ -698,8 +742,6 @@ int main(int argc, char** argv) {
                         wrote_outer_tri = 1;
                         num_tris += 2;
                     }
-
-                    printf("sliced 1\n");
                 }
             }
             num_tris += tris_written;
@@ -718,7 +760,6 @@ int main(int argc, char** argv) {
                         wrote_outer_tri = 1;
                         num_tris += 2;
                     }
-                    printf("sliced 2\n");
                 }
             }
             num_tris += tris_written;
@@ -737,7 +778,6 @@ int main(int argc, char** argv) {
                         wrote_outer_tri = 1;
                         num_tris += 2;
                     }
-                    printf("sliced 3\n");
                 }
             }
             num_tris += tris_written;
@@ -757,7 +797,6 @@ int main(int argc, char** argv) {
                         wrote_outer_tri = 1;
                         num_tris += 2;
                     }
-                    printf("sliced 4\n");
                 }
             }
             num_tris += tris_written;
@@ -776,7 +815,6 @@ int main(int argc, char** argv) {
                         wrote_outer_tri = 1;
                         num_tris += 2;
                     }
-                    printf("sliced 5\n");
                 }
             }
             num_tris += tris_written;
@@ -795,7 +833,6 @@ int main(int argc, char** argv) {
                         wrote_outer_tri = 1;
                         num_tris += 2;
                     }
-                    printf("sliced 6\n");
                 }
             }
             num_tris += tris_written;
@@ -814,7 +851,6 @@ int main(int argc, char** argv) {
                         wrote_outer_tri = 1;
                         num_tris += 2;
                     }
-                    printf("sliced 7\n");
                 }
             }
             num_tris += tris_written;
@@ -833,7 +869,6 @@ int main(int argc, char** argv) {
                         wrote_outer_tri = 1;
                         num_tris += 2;
                     }
-                    printf("sliced 8\n");
                 }
             }
             num_tris += tris_written;
