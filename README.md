@@ -72,17 +72,26 @@ Performs any number of transformations in the order listed on the command line. 
 
 ### stl_threads
 
-    stl_threads [ -f ] [ -D <diameter> ] [ -P <pitch> ] [ -a <angle> ] [ -h <height> ] [ -s <segments> ] <output file>
+    stl_threads [ -f ] [ -D <diameter> ] [ -P <pitch> ] [ -a <angle> ] 
+                [ -h <height> ] [ -s <segments> ] <output file>
 
 Outputs an stl file with male or female screw threads per the [ISO metric
 screw thread standard](http://en.wikipedia.org/wiki/ISO_metric_screw_thread).
 
-    -f - Outputs female threads (defaults to male).
+    -f            - Outputs female threads (defaults to male).
     -D <diameter> - Changes to major diameter of the threads.
-    -P <pitch> - Changes the height of a single thread, aka the pitch per the ISO metric standard.
-    -h <height> - Changes the total height of the threads.
-    -a <angle> - Changes the thread angle (degrees). The standard (and default) is 60 degrees. For 3D printing this can cause overhang issues as 60 degrees results in a 30 degree angle with the ground plane. Setting to 90 degrees results in a 45 degree angle with the ground plane.
-    -s <segments> - Changes the resolution of the generated STL file. More segments yields finer resolution. <segments> is the number of segments to approximate a circle. Defaults to 72 (every 5 degrees).
+    -P <pitch>    - Changes the height of a single thread, aka the pitch per 
+                    the ISO metric standard.
+    -h <height>   - Changes the total height of the threads.
+    -a <angle>    - Changes the thread angle (degrees). The standard (and 
+                    default) is 60 degrees. For 3D printing this can cause 
+                    overhang issues as 60 degrees results in a 30 degree 
+                    angle with the ground plane. Setting to 90 degrees 
+                    results in a 45 degree angle with the ground plane.
+    -s <segments> - Changes the resolution of the generated STL file. More 
+                    segments yields finer resolution. <segments> is the 
+                    number of segments to approximate a circle. Defaults to 
+                    72 (every 5 degrees).
 
 Future commands
 ---------------
