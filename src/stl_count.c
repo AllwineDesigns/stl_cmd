@@ -28,39 +28,78 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
-    fprintf(stderr, "usage: stl_count <input file>\n");
-    fprintf(stderr, "    Prints the number of triangles in the provided binary STL file.\n");
+    fprintf(stderr, "usage: stl_count [ <input file> ]\n");
+    fprintf(stderr, "    Prints the number of triangles in the provided binary STL file. If no input file is specified, data is read from stdin.\n");
 }
 
 int main(int argc, char** argv) {
-    if(argc != 2) {
+    if(argc == 2) {
+        FILE *f;
+        char* filename = argv[1];
+
+        if(!is_valid_binary_stl(filename)) {
+            fprintf(stderr, "stl_count only accepts binary stl files.\n");
+            exit(2);
+        }
+        f = fopen(filename, "r+b");
+        if(!f) {
+            fprintf(stderr, "Can't read file: %s\n", filename);
+            exit(2);
+        }
+        fseek(f, 80, SEEK_SET);
+
+        uint32_t num_tris;
+
+        if(fread(&num_tris, 1, 4, f) < 4) {
+            fprintf(stderr, "invalid binary stl file\n");
+            exit(2);
+        }
+
+        fclose(f);
+        printf("%d\n", num_tris);
+    } else if(argc > 2) {
         print_usage();
         exit(2);
+    } else {
+        off_t bights_read = 0;
+        while(bights_read < 80 && getc(stdin) != EOF) {
+            bights_read++;
+        }
+        if(bights_read < 80) {
+            fprintf(stderr, "invalid binary stl file\n");
+            exit(2);
+        }
+        // got through header
+
+        bights_read = 0;
+        uint8_t buff[4];
+
+        int c;
+        // now read num_tris
+        while(bights_read < 4 && (c = getc(stdin)) != EOF) {
+            buff[bights_read] = c;
+            bights_read++;
+        }
+
+        if(bights_read < 4) {
+            fprintf(stderr, "invalid binary stl file\n");
+            exit(2);
+        }
+
+        uint32_t num_tris = *((uint32_t*)buff);
+
+        // read the rest of the file 
+        while(bights_read < num_tris*16 && getc(stdin) != EOF) {
+            bights_read++;
+        }
+
+        if(bights_read < num_tris*16) {
+            fprintf(stderr, "invalid binary stl file\n");
+            exit(2);
+        }
+
+        printf("%d\n", num_tris);
     }
-
-    char* filename = argv[1];
-
-    if(!is_valid_binary_stl(filename)) {
-        fprintf(stderr, "stl_count only accepts binary stl files.\n");
-        exit(2);
-    }
-
-    FILE *f;
-    f = fopen(filename, "r+b");
-    if(!f) {
-        fprintf(stderr, "Can't read file: %s\n", filename);
-        exit(2);
-    }
-
-    fseek(f, 80, SEEK_SET);
-
-    uint32_t num_tris;
-
-    fread(&num_tris, 1, 4, f);
-
-    fclose(f);
-
-    printf("%s has %d triangles.\n", basename(filename), num_tris);
 
     return 0;
 }
