@@ -29,9 +29,9 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
-    fprintf(stderr, "usage: stl_cube [-w <width>] <output file>\n");
+    fprintf(stderr, "usage: stl_cube [-w <width>] [ <output file> ]\n");
     fprintf(stderr, "    Outputs an stl file of a cube with the provided width. ");
-    fprintf(stderr, "    If the width is omitted, it defaults to 1. ");
+    fprintf(stderr, "    If the width is omitted, it defaults to 1. If not output file is provided, data is sent to stdout. \n");
 }
 
 int main(int argc, char** argv) {
@@ -52,18 +52,23 @@ int main(int argc, char** argv) {
         }
     }
 
-    if(errflg || optind >= argc) {
+    if(errflg) {
         print_usage();
         exit(2);
     }
 
-    char *file = argv[optind];
     FILE *outf;
 
-    outf = fopen(file, "wb");
-    if(!outf) {
-        fprintf(stderr, "Can't write to file: %s\n", file);
-        exit(2);
+    if(optind == argc-1) {
+        char *file = argv[optind];
+
+        outf = fopen(file, "wb");
+        if(!outf) {
+            fprintf(stderr, "Can't write to file: %s\n", file);
+            exit(2);
+        }
+    } else {
+        outf = stdout;
     }
 
     char header[81] = {0};
@@ -177,8 +182,6 @@ int main(int argc, char** argv) {
         fwrite(tris[i], 1, 36, outf);
         fwrite(&abc, 1, 2,outf);
     }
-
-    fclose(outf);
 
     return 0;
 }
