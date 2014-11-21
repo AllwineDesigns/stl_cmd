@@ -32,7 +32,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
 void print_usage() {
     fprintf(stderr, "usage: stl_merge [ -o <out file> ] [ <in file1> ... ]\n");
-    fprintf(stderr, "    Merges two binary stl files into a single file.\n");
+    fprintf(stderr, "    Merges binary stl files into a single file. If no out file is provided, data is output to stdout.\n");
 }
 
 int main(int argc, char** argv) {
