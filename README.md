@@ -25,9 +25,9 @@ Prints or sets the data in the header section of a binary STL file. The header s
 
 ### stl_count
 
-    stl_count <input file>
+    stl_count [ <input file> ]
 
-Prints the number of triangles in the provided binary STL file.
+Prints the number of triangles in the provided binary STL file. If no input file is provided, data is read from stdin.
 
 ### stl_bbox
 
@@ -43,15 +43,15 @@ Outputs an empty binary STL file. Can be useful to initialize an empty STL file 
 
 ### stl_cube
 
-    stl_cube [ -w <width> ] <output file>
+    stl_cube [ -w <width> ] [ <output file> ]
 
-Outputs a binary STL file of a cube with the provided width.
+Outputs a binary STL file of a cube with the provided width. If no output file is provided, data is sent to stdout.
 
 ### stl_merge
 
-    stl_merge -o <output file> <input file1> <input file2>
+    stl_merge [ -o <output file> ] [ <input file> ... ]
 
-Combines two binary STL files into a single one.
+Combines binary STL files into a single one. If no output file is provided, data is written to stdout.
 
 ### stl_transform
 

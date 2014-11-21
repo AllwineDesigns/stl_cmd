@@ -28,6 +28,13 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
 #define BUFFER_SIZE 4096
 
+// TODO make input and output file optional, if not specified read from 
+// stdin and write to stdout. Add to other stl_cmds as well. This will 
+// allow for piping between stl_cmds which could elimate some temporary files:
+// stl_cube -w 1 | stl_transform -tx 10 > cube.stl
+// stl_cube -w 2 | stl_transform -tx 20 > cube2.stl
+// stl_merge *.stl |  transform -s 10 > all_cubes_scaled.stl
+
 void print_usage() {
     fprintf(stderr, "usage: stl_transform [[ <transformation> ] ...] <input file> <output file>\n");
     fprintf(stderr, "    Performs any number of the following transformations in\n");
