@@ -26,6 +26,12 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include <math.h>
 #include "stl_util.h"
 
+// TODO make output file optional, if not specified output
+// to stdout. Requires calculating how many tris are necessary
+// before outputting any. Currently, we write all our tris, then
+// fseek back to byte 80 to set the number of tris in the file. That
+// won't work with stdout.
+
 void print_usage() {
     fprintf(stderr, "usage: stl_threads [ -f ] [ -D <diameter> ] [ -P <pitch> ] [ -a <angle> ]\n"
                     "                   [ -h <height> ] [ -s <segments> ] <output file>\n");
@@ -45,7 +51,9 @@ void print_usage() {
                     "    -s <segments> - Changes the resolution of the generated STL file. More\n"
                     "                    segments yields finer resolution. <segments> is the number\n"
                     "                    of segments to approximate a circle. Defaults to 72 (every\n"
-                    "                    5 degrees).");
+                    "                    5 degrees).\n"
+                    "    -o <outer female diameter> - When generating female threads, this is the\n"
+                    "                                 outer diameter. Must be greater than <diameter>.\n");
 }
 
 void print_normal(vec *p1, vec *p2, vec *p3, int rev) {
@@ -404,12 +412,13 @@ int main(int argc, char** argv) {
 
     float screwHeight = 20; // height of entire screw (without a head)
                             // TODO maybe add ability to add a head
+    float outerDiameter = -1;
 
     int segments = 72; // number of segments to approximate a circle, 
                         // higher the number, higher the resolution 
                         // (and file size) of the stl file
 
-    while((c = getopt(argc, argv, "fP:D:a:h:s:")) != -1) {
+    while((c = getopt(argc, argv, "fP:D:a:h:s:o:")) != -1) {
         switch(c) {
             case 'f':
                 male = 0;
@@ -429,11 +438,18 @@ int main(int argc, char** argv) {
             case 's':
                 segments = atoi(optarg);
                 break;
+            case 'o':
+                outerDiameter = atof(optarg);
+                break;
             case '?':
                 fprintf(stderr, "Unrecognized option: '-%c'\n", optopt);
                 errflg++;
                 break;
         }
+    }
+
+    if(outerDiameter <= D) {
+        outerDiameter = D+1;
     }
 
     if(errflg || optind >= argc) {
@@ -491,7 +507,7 @@ int main(int argc, char** argv) {
     float Dmin = D-2*Hdiff;
     float Dmin_2 = Dmin/2;
     float D_2 = D/2;
-    float fD = D_2+1;
+    float fD = outerDiameter/2;
 
 
     /*
