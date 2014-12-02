@@ -12,6 +12,25 @@ Getting started
 
 The stl_cmds will be compiled and placed in the bin/ directory in the root of the stl_cmd repo. Add it to your path and you can perform the following commands.
 
+Examples
+--------
+
+You have an STL file specified in inches and you want to convert it to mm.
+
+    stl_transform -s 25.4 my_file_inches.stl my_file_mm.stl
+
+Generate a cube rotated 45 degrees about the z axis.
+
+    stl_cube | stl_transform -rz 45 > cube.stl
+
+Count the number of triangles in an STL file.
+
+    stl_count my_file.stl
+
+Set the header of your STL file to contain copyright information.
+
+    stl_header -s "My File. Copyright <Your name> 2014." my_file.stl
+
 STL Commands
 ------------
 
