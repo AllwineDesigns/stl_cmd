@@ -19,9 +19,9 @@ You have an STL file specified in inches and you want to convert it to mm.
 
     stl_transform -s 25.4 my_file_inches.stl my_file_mm.stl
 
-Generate a cube rotated 45 degrees about the z axis.
+Discard stored normals and calculate them based on vertex ordering (can fix some broken stl files).
 
-    stl_cube | stl_transform -rz 45 > cube.stl
+    stl_normals -c my_file.stl my_fixed_file.stl
 
 Count the number of triangles in an STL file.
 
@@ -47,6 +47,12 @@ Prints or sets the data in the header section of a binary STL file. The header s
     stl_count [ <input file> ]
 
 Prints the number of triangles in the provided binary STL file. If no input file is provided, data is read from stdin.
+
+### stl_normals
+
+    stl_normals [ -v ] [ -c ] [ -r ] [ <input file> ] [ <out file> ]
+
+Compares normals stored in input file with normals calculated from the vertex ordering. Provided flags can tell stl_normals to fix the normals or reverse the point ordering.
 
 ### stl_bbox
 

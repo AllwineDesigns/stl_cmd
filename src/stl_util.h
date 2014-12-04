@@ -24,7 +24,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include <sys/stat.h>
 #include <math.h>
 
-#define EPSILON 0.00001f
+#define EPSILON 0.0001f
 
 int is_valid_binary_stl(char* filename) {
     FILE *f;
