@@ -118,6 +118,14 @@ screw thread standard](http://en.wikipedia.org/wiki/ISO_metric_screw_thread).
                     number of segments to approximate a circle. Defaults to 
                     72 (every 5 degrees).
 
+### stl_boolean 
+
+    stl_boolean -a <STL file A> -b <STL file B> [ -i ] [ -u ] [ -d ] [ -v <voxel size> ] <out file>
+
+Performs a CSG boolean operation on STL files A and B. First, converts each STL file to sparse volume 
+level sets using voxel size set by -v (defaults to .5), then performs the CSG operation and outputs a 
+high resolution mesh with the result (mesh simplification is recommended, someone want to write stl_decimate?).
+
 Future commands
 ---------------
 
@@ -134,10 +142,6 @@ These are ideas for future commands that may make it into the stl_cmd suite.
 ### stl_cone 
 
     Generate an STL file with a single cone in it.
-
-### stl_boolean 
-
-    Combine two STL files using boolean operations.
 
 ### stl_twist
 
