@@ -10,7 +10,7 @@ $(BIN_DIR)/%: src/%.c src/stl_util.h
 	$(CC) $(CFLAGS) $(OUTPUT_OPTION) $<
 
 bin/stl_boolean: src/stl_boolean.cpp
-	gcc -lstdc++ src/stl_boolean.cpp -o bin/stl_boolean -I/Users/jallwine/work/vdb/install/include -I/usr/local/include -I/Users/jallwine/work/vdb/tbb/include -L/Users/jallwine/work/vdb/tbb/lib -L/Users/jallwine/work/vdb/install/lib -L/usr/local/lib -ltbb -lopenvdb `pkg-config --libs OpenEXR` -I/Users/jallwine/work/stl_cmd/src
+	gcc -lstdc++ src/stl_boolean.cpp -o bin/stl_boolean 
 
 $(CMDS): | $(BIN_DIR)
 
