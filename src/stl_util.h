@@ -699,4 +699,77 @@ float vec_dot(vec *a, vec *b) {
     return a->x*b->x+a->y*b->y+a->z*b->z;
 }
 
+void write_tri(FILE *f,
+                vec *p1, 
+                vec *p2, 
+                vec *p3, int rev) {
+    if(rev) {
+        vec *tmp = p1;
+        p1 = p3;
+        p3 = tmp;
+    }
+
+    vec n1;
+    vec v1,v2;
+
+    vec_sub(p2,p1,&v1);
+    vec_sub(p3,p1,&v2);
+
+    vec_cross(&v1,&v2,&n1);
+    vec_normalize(&n1,&n1);
+
+    uint16_t abc = 0;
+
+    fwrite(&n1, 1, 12, f);
+    fwrite(p1, 1, 12, f);
+    fwrite(p2, 1, 12, f);
+    fwrite(p3, 1, 12, f);
+    fwrite(&abc,1,  2, f);
+}
+
+void write_quad(FILE *f,
+                vec *p1, 
+                vec *p2, 
+                vec *p3, 
+                vec *p4,int rev) {
+    //write two triangles 1,2,3 and 1,3,4
+    if(rev) {
+        vec *tmp = p1;
+        p1 = p4;
+        p4 = tmp;
+
+        tmp = p2;
+        p2 = p3;
+        p3 = tmp;
+    }
+
+    vec n1,n2;
+
+    vec v1,v2,v3;
+
+    vec_sub(p2,p1,&v1);
+    vec_sub(p3,p1,&v2);
+    vec_sub(p4,p1,&v3);
+
+    vec_cross(&v1,&v2,&n1);
+    vec_normalize(&n1,&n1);
+
+    vec_cross(&v2,&v3,&n2);
+    vec_normalize(&n2,&n2);
+
+    uint16_t abc = 0;
+
+    fwrite(&n1, 1, 12, f);
+    fwrite(p1, 1, 12, f);
+    fwrite(p2, 1, 12, f);
+    fwrite(p3, 1, 12, f);
+    fwrite(&abc,1,  2, f);
+
+    fwrite(&n2, 1, 12, f);
+    fwrite(p1, 1, 12, f);
+    fwrite(p3, 1, 12, f);
+    fwrite(p4, 1, 12, f);
+    fwrite(&abc,1,  2, f);
+}
+
 #endif

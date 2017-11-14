@@ -64,36 +64,6 @@ void ReadModel(const char *filename, csgjs_model& model) {
     fclose(f);
 }
 
-// taken from stl_threads, should probably be factored out to a shared header/library or something
-void write_tri(FILE *f,
-                vec *p1, 
-                vec *p2, 
-                vec *p3, int rev) {
-    if(rev) {
-        vec *tmp = p1;
-        p1 = p3;
-        p3 = tmp;
-    }
-
-    vec n1;
-    vec v1,v2;
-
-    vec_sub(p2,p1,&v1);
-    vec_sub(p3,p1,&v2);
-
-    vec_cross(&v1,&v2,&n1);
-    vec_normalize(&n1,&n1);
-
-    uint16_t abc = 0;
-
-    fwrite(&n1, 1, 12, f);
-    fwrite(p1, 1, 12, f);
-    fwrite(p2, 1, 12, f);
-    fwrite(p3, 1, 12, f);
-    fwrite(&abc,1,  2, f);
-}
-
-
 void WriteModel(const char *filename, csgjs_model& model) {
     FILE *f;
 

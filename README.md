@@ -72,6 +72,13 @@ Outputs an empty binary STL file. Can be useful to initialize an empty STL file 
 
 Outputs a binary STL file of a cube with the provided width. If no output file is provided, data is sent to stdout.
 
+### stl_sphere 
+
+    stl_sphere [-r <radius> ] [ -s <longitudinal segments> ] [ -t <latitudinal segments> ] [ <output file> ]\n");
+
+Outputs an stl file of a sphere with the provided radius and number of segments.
+If the radius is omitted, it defaults to 1. If longitudinal segments is omitted, it defaults to 32. If latitudinal segments is omitted, it defaults to half the longitudinal segments. If no output file is provided, data is sent to stdout.
+
 ### stl_merge
 
     stl_merge [ -o <output file> ] [ <input file> ... ]
@@ -130,10 +137,6 @@ Future commands
 ---------------
 
 These are ideas for future commands that may make it into the stl_cmd suite.
-
-### stl_sphere 
-
-    Generate an STL file with a single sphere in it.
 
 ### stl_cylinder 
 
