@@ -127,11 +127,10 @@ screw thread standard](http://en.wikipedia.org/wiki/ISO_metric_screw_thread).
 
 ### stl_boolean 
 
-    stl_boolean -a <STL file A> -b <STL file B> [ -i ] [ -u ] [ -d ] [ -v <voxel size> ] <out file>
+    stl_boolean -a <STL file A> -b <STL file B> [ -i ] [ -u ] [ -d ] <out file>
 
-Performs a CSG boolean operation on STL files A and B. First, converts each STL file to sparse volume 
-level sets using voxel size set by -v (defaults to .5), then performs the CSG operation and outputs a 
-high resolution mesh with the result (mesh simplification is recommended, someone want to write stl_decimate?).
+Performs a CSG boolean operation on STL files A and B using BSP trees. -i will perform the intersection of A and B. -u will 
+perform the union of A and B. -d will perform the difference of A and B.
 
 Future commands
 ---------------
