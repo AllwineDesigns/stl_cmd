@@ -42,7 +42,7 @@ namespace csgjs {
   }
 
   Vector3 Vector3::unit() const {
-    return (*this)/this->lengthSquared();
+    return (*this)/this->length();
   }
 
   Vector3 Vector3::cross(const Vector3 &a) const {

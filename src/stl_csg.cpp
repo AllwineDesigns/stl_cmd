@@ -1,6 +1,6 @@
 /*
 
-Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
+Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
     This file is part of stl_cmd.
 
@@ -25,6 +25,8 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include <iostream>
 
 #include "csgjs/CSG.h"
+#include "csgjs/Trees.h"
+#include "csgjs/util.h"
 
 using namespace csgjs;
 
@@ -62,12 +64,20 @@ int main(int argc, char **argv) {
       Vertex(Vector3(1,1,0)) })
   };
 
-  CSG csg(p);
-  CSG csg2 = csg.transform(Matrix4x4::translate(-2,0,0));
+//  std::vector<Polygon> stl_file = ReadSTLFile("model.stl");
+  std::vector<Polygon> stl_file = ReadSTLFile("torus.stl");
 
-  CSG both = csg.csgUnion(csg2);
+//  CSG csg(stl_file);
+//  CSG csg2 = csg.transform(Matrix4x4::translate(-2,0,0));
 
-  std::cout << csg << std::endl;
-  std::cout << csg2 << std::endl;
-  std::cout << both << std::endl;
+//  CSG both = csg.csgUnion(csg2);
+
+//  std::cout << csg << std::endl;
+//  std::cout << csg2 << std::endl;
+//  std::cout << both << std::endl;
+
+  Tree tree(stl_file);
+//  Tree tree(p);
+
+  std::cout << tree << std::endl;
 }

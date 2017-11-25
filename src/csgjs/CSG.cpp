@@ -12,6 +12,7 @@ namespace csgjs {
   CSG CSG::csgUnion(const CSG &csg, bool retesselate, bool canonicalize) const {
     if(!mayOverlap(csg)) {
       return unionForNonIntersecting(csg);
+    } else {
     }
 
     return CSG();

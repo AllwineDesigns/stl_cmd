@@ -6,6 +6,9 @@
 
 namespace csgjs {
 
+class Plane;
+inline std::ostream& operator<<(std::ostream& os, const Plane &plane);
+
 struct Plane {
   Vector3 normal;
   float w;
@@ -13,7 +16,7 @@ struct Plane {
   Plane() : normal(), w(0) {}
   Plane(const Vector3 &n, const float ww) : normal(n), w(ww) {}
 
-  Plane flipped() {
+  Plane flipped() const {
     return Plane(-normal, -w);
   }
 
@@ -36,7 +39,27 @@ struct Plane {
     return newPlane;
   }
 
-  bool operator==(const Plane &p) {
+  Vector3 splitLineBetweenPoints(const Vector3 &p1, const Vector3 &p2) const {
+    Vector3 dir = p2-p1;
+    float dot = normal.dot(dir);
+    float lambda = 0;
+    if(dot > EPS || dot < NEG_EPS) {
+      lambda = (w-normal.dot(p1))/dot;
+    }
+    if(lambda > 1) {
+      lambda = 1;
+    }
+
+    if(lambda < 0) {
+      lambda = 0;
+    }
+
+    Vector3 inter = p1+dir*lambda;
+
+    return p1+dir*lambda;
+  }
+
+  bool operator==(const Plane &p) const {
     return normal == p.normal && w == p.w;
   }
 
@@ -77,6 +100,7 @@ inline std::ostream& operator<<(std::ostream& os, const Plane &plane) {
   os << plane.normal << ", " << plane.w;
   return os;
 }
+
 
 }
 

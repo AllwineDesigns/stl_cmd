@@ -17,6 +17,7 @@ class Polygon {
     Polygon(std::vector<Vertex> &&v, const Plane &p);
     Polygon(const std::vector<Vertex> &v, const Plane &p);
     Polygon(const std::vector<Vertex> &v);
+    Polygon();
 
     bool checkIfConvex() const;
     std::pair<Vector3, float> boundingSphere() const;
