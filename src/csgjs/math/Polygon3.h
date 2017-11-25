@@ -20,7 +20,7 @@ class Polygon {
     Polygon();
 
     bool checkIfConvex() const;
-    std::pair<Vector3, float> boundingSphere() const;
+    std::pair<Vector3, csgjs_real> boundingSphere() const;
     std::pair<Vector3, Vector3> boundingBox() const;
 
     Polygon transform(const Matrix4x4 &m) const;
@@ -29,7 +29,7 @@ class Polygon {
 
   private:
     mutable bool _boundingSphereCacheValid;
-    mutable std::pair<Vector3, float> _boundingSphereCache;
+    mutable std::pair<Vector3, csgjs_real> _boundingSphereCache;
 
     mutable bool _boundingBoxCacheValid;
     mutable std::pair<Vector3, Vector3> _boundingBoxCache;
@@ -38,7 +38,7 @@ class Polygon {
 std::ostream& operator<<(std::ostream& os, const Polygon &poly);
 
 std::ostream& operator<<(std::ostream& os, const std::pair<Vector3, Vector3> &bounds);
-std::ostream& operator<<(std::ostream& os, const std::pair<Vector3, float> &bounds);
+std::ostream& operator<<(std::ostream& os, const std::pair<Vector3, csgjs_real> &bounds);
 
 }
 

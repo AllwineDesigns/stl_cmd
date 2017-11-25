@@ -11,8 +11,8 @@ namespace csgjs {
     std::vector<PolygonTreeNode*> frontNodes;
     std::vector<PolygonTreeNode*> backNodes;
 
-//    int pick = fastRandom(polyTreeNodes.size());
-    int pick = 0;
+    int pick = fastRandom(polyTreeNodes.size());
+//    int pick = 0;
     plane = polyTreeNodes[pick]->getPolygon().plane;
 
     std::vector<PolygonTreeNode*>::const_iterator itr = polyTreeNodes.begin();
@@ -73,11 +73,11 @@ namespace csgjs {
     return child;
   }
 
-  bool PolygonTreeNode::isRootNode() {
+  bool PolygonTreeNode::isRootNode() const {
     return parent == NULL;
   }
 
-  bool PolygonTreeNode::isRemoved() {
+  bool PolygonTreeNode::isRemoved() const {
     return removed;
   }
 
@@ -114,12 +114,12 @@ namespace csgjs {
     }
 #endif
 
-    std::pair<Vector3, float> bound = polygon.boundingSphere();
-    float sphereRadius = bound.second;
+    std::pair<Vector3, csgjs_real> bound = polygon.boundingSphere();
+    csgjs_real sphereRadius = bound.second;
     Vector3 sphereCenter = bound.first;
 
     Vector3 planeNormal = plane.normal;
-    float d = planeNormal.dot(sphereCenter) - plane.w;
+    csgjs_real d = planeNormal.dot(sphereCenter) - plane.w;
 //    std::cout << d << " (" << sphereRadius << "," << sphereCenter << ") " << polygon << plane << std::endl;
     if(d > sphereRadius) {
       frontNodes.push_back(this);
@@ -145,7 +145,7 @@ namespace csgjs {
       bool hasFront = false;
       bool hasBack = false;
       while(itr != polygon.vertices.end()) {
-        float t = plane.normal.dot(itr->pos)-plane.w;
+        csgjs_real t = plane.normal.dot(itr->pos)-plane.w;
         bool isBack = t < 0;
         vertexIsBack.push_back(isBack);
         if(t > EPS) {
@@ -252,9 +252,20 @@ namespace csgjs {
     }
   }
 
+  int PolygonTreeNode::countNodes() const {
+    int count = 1;
+
+    std::vector<PolygonTreeNode*>::const_iterator itr = children.begin();
+    while(itr != children.end()) {
+      count += (*itr)->countNodes();
+      ++itr;
+    }
+    return count;
+  }
+
   std::ostream& operator<<(std::ostream& os, const Tree &tree) {
 //    os << tree.rootnode << std::endl;
-    os << tree.polygonTree << std::endl;
+    os << tree.polygonTree.countNodes() << std::endl;
     return os;
   }
 

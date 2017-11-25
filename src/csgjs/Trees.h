@@ -33,8 +33,9 @@ namespace csgjs {
 
       PolygonTreeNode* addChild(const Polygon &polygon);
 
-      bool isRootNode();
-      bool isRemoved();
+      bool isRootNode() const;
+      bool isRemoved() const;
+      int countNodes() const;
       Polygon& getPolygon();
       void splitByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes, 
                                             std::vector<PolygonTreeNode*> &coplanarBackNodes,

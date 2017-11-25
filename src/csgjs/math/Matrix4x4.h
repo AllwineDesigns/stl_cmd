@@ -1,6 +1,8 @@
 #ifndef __CSGJS_MATRIX4x4__
 #define __CSGJS_MATRIX4x4__
 
+#include "csgjs/constants.h"
+
 // row major implmentation of 4x4 matrix
 // i.e. values stored as [ a b c d e f g h i j k l m n o p ]
 // represent:
@@ -22,17 +24,17 @@ namespace csgjs {
 struct Vector3;
 
 struct Matrix4x4 {
-  float m[16];
+  csgjs_real m[16];
 
   Matrix4x4();
-  Matrix4x4(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33);
+  Matrix4x4(csgjs_real m00, csgjs_real m01, csgjs_real m02, csgjs_real m03, csgjs_real m10, csgjs_real m11, csgjs_real m12, csgjs_real m13, csgjs_real m20, csgjs_real m21, csgjs_real m22, csgjs_real m23, csgjs_real m30, csgjs_real m31, csgjs_real m32, csgjs_real m33);
 
   bool isMirroring() const;
 
   Matrix4x4 operator+(const Matrix4x4 &mat) const;
   Matrix4x4 operator-(const Matrix4x4 &mat) const;
   Matrix4x4 operator*(const Matrix4x4 &mat) const;
-  static Matrix4x4 translate(float x, float y, float z);
+  static Matrix4x4 translate(csgjs_real x, csgjs_real y, csgjs_real z);
 };
 
 }

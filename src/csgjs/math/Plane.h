@@ -11,10 +11,10 @@ inline std::ostream& operator<<(std::ostream& os, const Plane &plane);
 
 struct Plane {
   Vector3 normal;
-  float w;
+  csgjs_real w;
 
   Plane() : normal(), w(0) {}
-  Plane(const Vector3 &n, const float ww) : normal(n), w(ww) {}
+  Plane(const Vector3 &n, const csgjs_real ww) : normal(n), w(ww) {}
 
   Plane flipped() const {
     return Plane(-normal, -w);
@@ -41,8 +41,8 @@ struct Plane {
 
   Vector3 splitLineBetweenPoints(const Vector3 &p1, const Vector3 &p2) const {
     Vector3 dir = p2-p1;
-    float dot = normal.dot(dir);
-    float lambda = 0;
+    csgjs_real dot = normal.dot(dir);
+    csgjs_real lambda = 0;
     if(dot > EPS || dot < NEG_EPS) {
       lambda = (w-normal.dot(p1))/dot;
     }
@@ -90,7 +90,7 @@ struct Plane {
 
   static Plane fromNormalAndPoint(const Vector3 &n, const Vector3 &p) {
     Vector3 normal = n.unit();
-    float w = p.dot(normal);
+    csgjs_real w = p.dot(normal);
     return Plane(normal, w);
   }
 

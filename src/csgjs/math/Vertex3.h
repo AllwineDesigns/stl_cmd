@@ -1,6 +1,7 @@
 #ifndef __CSGJS_VERTEX3__
 #define __CSGJS_VERTEX3__
 
+#include "csgjs/constants.h"
 #include "csgjs/math/Vector3.h"
 #include <iostream>
 
@@ -17,7 +18,7 @@ namespace csgjs {
       return *this;
     }
 
-    Vertex interpolate(Vertex other, float t) const {
+    Vertex interpolate(Vertex other, csgjs_real t) const {
       return Vertex(pos.lerp(other.pos, t));
     }
 

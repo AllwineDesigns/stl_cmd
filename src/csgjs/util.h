@@ -10,7 +10,6 @@ namespace csgjs {
   std::vector<Polygon> ReadSTLFile(const char* filename); 
   unsigned long xorshf96(void);
   int fastRandom(int max);
-
 }
 
 #endif

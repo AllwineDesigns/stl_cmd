@@ -1,9 +1,11 @@
 #ifndef __CSGJS_CONSTANTS__
 #define __CSGJS_CONSTANTS__
 
-//#define CSGJS_DEBUG
-const float EPS = .00001;
-const float NEG_EPS = -EPS;
-const float EPS_SQUARED = EPS*EPS;
+typedef double csgjs_real;
+
+#define CSGJS_DEBUG
+const csgjs_real EPS = .00001;
+const csgjs_real NEG_EPS = -EPS;
+const csgjs_real EPS_SQUARED = EPS*EPS;
 
 #endif

@@ -67,7 +67,7 @@ namespace csgjs {
 
   bool Polygon::isConvexPoint(const Vector3 &prevpoint, const Vector3 &point, const Vector3 &nextpoint, const Vector3 normal) {
     Vector3 crossproduct = (point-prevpoint).cross(nextpoint-point);
-    float crossdotnormal = crossproduct.dot(normal);
+    csgjs_real crossdotnormal = crossproduct.dot(normal);
     return crossdotnormal >= 0;
   }
 
@@ -101,7 +101,7 @@ namespace csgjs {
     return _boundingBoxCache;
   }
 
-  std::pair<Vector3, float> Polygon::boundingSphere() const {
+  std::pair<Vector3, csgjs_real> Polygon::boundingSphere() const {
     if(!_boundingSphereCacheValid) {
       std::pair<Vector3, Vector3> box = boundingBox();
       _boundingSphereCache.first = .5*(box.first+box.second);
@@ -134,7 +134,7 @@ namespace csgjs {
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const std::pair<Vector3, float> &bounds) {
+  std::ostream& operator<<(std::ostream& os, const std::pair<Vector3, csgjs_real> &bounds) {
     os << bounds.first << " - " << bounds.second;
     return os;
   }

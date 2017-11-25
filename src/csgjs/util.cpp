@@ -2,6 +2,7 @@
 #define __CSGJS_UTIL__
 
 #include "math/Polygon3.h"
+#include "stl_util.h"
 #include <vector>
 #include <stdio.h>
 
@@ -25,9 +26,9 @@ namespace csgjs {
     uint32_t num_tris;
     fread(&num_tris, 4, 1, f);
 
-    Vector3 p1;
-    Vector3 p2;
-    Vector3 p3;
+    vec p1;
+    vec p2;
+    vec p3;
 
     for(int i = 0; i < num_tris; i++) {
         fseek(f, 12, SEEK_CUR); // normal
@@ -38,9 +39,9 @@ namespace csgjs {
         fseek(f, 2, SEEK_CUR);
 
         verts.clear();
-        verts.push_back(Vertex(p1));
-        verts.push_back(Vertex(p2));
-        verts.push_back(Vertex(p3));
+        verts.push_back(Vertex(Vector3(p1.x, p1.y, p1.z)));
+        verts.push_back(Vertex(Vector3(p2.x, p2.y, p2.z)));
+        verts.push_back(Vertex(Vector3(p3.x, p3.y, p3.z)));
 
         polys.push_back(Polygon(verts));
     }

@@ -26,7 +26,7 @@ namespace csgjs {
     m[15] = 1;
   }
   // mrc - m<row><col>
-  Matrix4x4::Matrix4x4(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33) {
+  Matrix4x4::Matrix4x4(csgjs_real m00, csgjs_real m01, csgjs_real m02, csgjs_real m03, csgjs_real m10, csgjs_real m11, csgjs_real m12, csgjs_real m13, csgjs_real m20, csgjs_real m21, csgjs_real m22, csgjs_real m23, csgjs_real m30, csgjs_real m31, csgjs_real m32, csgjs_real m33) {
     // identity matrix
     m[0] = m00;
     m[1] = m01;
@@ -99,39 +99,39 @@ namespace csgjs {
   }
 
   Matrix4x4 Matrix4x4::operator*(const Matrix4x4 &mat) const {
-    const float a00 = m[0];
-    const float a01 = m[1];
-    const float a02 = m[2];
-    const float a03 = m[3];
-    const float a10 = m[4];
-    const float a11 = m[5];
-    const float a12 = m[6];
-    const float a13 = m[7];
-    const float a20 = m[8];
-    const float a21 = m[9];
-    const float a22 = m[10];
-    const float a23 = m[11];
-    const float a30 = m[12];
-    const float a31 = m[13];
-    const float a32 = m[14];
-    const float a33 = m[15];
+    const csgjs_real a00 = m[0];
+    const csgjs_real a01 = m[1];
+    const csgjs_real a02 = m[2];
+    const csgjs_real a03 = m[3];
+    const csgjs_real a10 = m[4];
+    const csgjs_real a11 = m[5];
+    const csgjs_real a12 = m[6];
+    const csgjs_real a13 = m[7];
+    const csgjs_real a20 = m[8];
+    const csgjs_real a21 = m[9];
+    const csgjs_real a22 = m[10];
+    const csgjs_real a23 = m[11];
+    const csgjs_real a30 = m[12];
+    const csgjs_real a31 = m[13];
+    const csgjs_real a32 = m[14];
+    const csgjs_real a33 = m[15];
 
-    const float b00 = mat.m[0];
-    const float b01 = mat.m[1];
-    const float b02 = mat.m[2];
-    const float b03 = mat.m[3];
-    const float b10 = mat.m[4];
-    const float b11 = mat.m[5];
-    const float b12 = mat.m[6];
-    const float b13 = mat.m[7];
-    const float b20 = mat.m[8];
-    const float b21 = mat.m[9];
-    const float b22 = mat.m[10];
-    const float b23 = mat.m[11];
-    const float b30 = mat.m[12];
-    const float b31 = mat.m[13];
-    const float b32 = mat.m[14];
-    const float b33 = mat.m[15];
+    const csgjs_real b00 = mat.m[0];
+    const csgjs_real b01 = mat.m[1];
+    const csgjs_real b02 = mat.m[2];
+    const csgjs_real b03 = mat.m[3];
+    const csgjs_real b10 = mat.m[4];
+    const csgjs_real b11 = mat.m[5];
+    const csgjs_real b12 = mat.m[6];
+    const csgjs_real b13 = mat.m[7];
+    const csgjs_real b20 = mat.m[8];
+    const csgjs_real b21 = mat.m[9];
+    const csgjs_real b22 = mat.m[10];
+    const csgjs_real b23 = mat.m[11];
+    const csgjs_real b30 = mat.m[12];
+    const csgjs_real b31 = mat.m[13];
+    const csgjs_real b32 = mat.m[14];
+    const csgjs_real b33 = mat.m[15];
     
     return Matrix4x4(a00*b00+a01*b10+a02*b20+a03*b30,
                      a00*b01+a01*b11+a02*b21+a03*b31,
@@ -151,7 +151,7 @@ namespace csgjs {
                      a30*b03+a31*b13+a32*b23+a33*b33);
   }
 
-  Matrix4x4 Matrix4x4::translate(float x, float y, float z) {
+  Matrix4x4 Matrix4x4::translate(csgjs_real x, csgjs_real y, csgjs_real z) {
     return Matrix4x4(1,0,0,0,
                      0,1,0,0,
                      0,0,1,0,
