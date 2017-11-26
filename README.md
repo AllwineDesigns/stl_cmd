@@ -34,8 +34,6 @@ Set the header of your STL file to contain copyright information.
 STL Commands
 ------------
 
-This list is rather short for now, but hopefully will grow over time.
-
 ### stl_header
 
     stl_header [-s <header>] [-o <output file>] <input file>
