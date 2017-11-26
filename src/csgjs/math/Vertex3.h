@@ -14,6 +14,7 @@ namespace csgjs {
 
     Vertex(const Vector3 &p) : pos(p) {}
 
+    // if vertex had normal data or something like that, flip it here
     Vertex flipped() const {
       return *this;
     }

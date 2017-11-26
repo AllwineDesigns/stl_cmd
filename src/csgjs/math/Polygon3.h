@@ -23,6 +23,7 @@ class Polygon {
     std::pair<Vector3, csgjs_real> boundingSphere() const;
     std::pair<Vector3, Vector3> boundingBox() const;
 
+    Polygon flipped() const;
     Polygon transform(const Matrix4x4 &m) const;
 
     static bool isConvexPoint(const Vector3 &prevpoint, const Vector3 &point, const Vector3 &nextpoint, const Vector3 normal);

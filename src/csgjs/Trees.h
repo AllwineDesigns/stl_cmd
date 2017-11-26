@@ -13,6 +13,7 @@ namespace csgjs {
       PolygonTreeNode *parent;
       std::vector<PolygonTreeNode*> children;
       Polygon polygon;
+      bool valid;
       bool removed;
 
       void splitLeafByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes, 
@@ -25,6 +26,8 @@ namespace csgjs {
                                                    std::vector<PolygonTreeNode*> &frontNodes,
                                                    std::vector<PolygonTreeNode*> &backNodes);
 
+      void invertRecurse();
+
     public:
       PolygonTreeNode();
       PolygonTreeNode(const Polygon &polygon);
@@ -33,6 +36,10 @@ namespace csgjs {
 
       PolygonTreeNode* addChild(const Polygon &polygon);
 
+      void getPolygons(std::vector<Polygon> &polygons) const;
+      void invalidate();
+      void remove();
+      void invert();
       bool isRootNode() const;
       bool isRemoved() const;
       int countNodes() const;
@@ -47,6 +54,8 @@ namespace csgjs {
   };
 
 
+  class Tree;
+
   class Node {
     private:
       Plane plane;
@@ -60,6 +69,9 @@ namespace csgjs {
       Node(Node* p);
 
       bool isRootNode() const;
+      void invert();
+      void clipTo(Tree &tree, bool alsoRemoveCoplanarFront=false);
+      void clipPolygons(std::vector<PolygonTreeNode*> &polyTreeNodes, bool alsoRemoveCoplanarFront=false);
       void addPolygonTreeNodes(const std::vector<PolygonTreeNode*> &polyTreeNodes);
   };
 
@@ -72,7 +84,14 @@ namespace csgjs {
     public:
       Tree(const std::vector<Polygon> &polygons);
 
+      void addPolygons(const std::vector<Polygon> &polygons);
+
+      void clipTo(Tree &tree, bool alsoRemoveCoplanarFront=false);
+      void invert();
+      std::vector<Polygon> toPolygons();
+
       friend std::ostream& operator<<(std::ostream& os, const Tree &tree);
+      friend Node;
   };
 }
 

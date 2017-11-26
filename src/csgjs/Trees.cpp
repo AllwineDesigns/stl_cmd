@@ -7,6 +7,22 @@ namespace csgjs {
   Node::Node(Node *p) : parent(p), front(NULL), back(NULL) {
   }
 
+  void Node::invert() {
+    plane = plane.flipped();
+
+    if(front != NULL) {
+      front->invert();
+    }
+
+    if(back != NULL) {
+      back->invert();
+    }
+
+    Node *n = front;
+    front = back;
+    back = n;
+  }
+
   void Node::addPolygonTreeNodes(const std::vector<PolygonTreeNode*> &polyTreeNodes) {
     std::vector<PolygonTreeNode*> frontNodes;
     std::vector<PolygonTreeNode*> backNodes;
@@ -40,7 +56,53 @@ namespace csgjs {
     return parent == NULL;
   }
 
+  void Node::clipTo(Tree &tree, bool alsoRemoveCoplanarFront) {
+    if(polygonTreeNodes.size() > 0) {
+      tree.rootnode.clipPolygons(polygonTreeNodes, alsoRemoveCoplanarFront);
+    }
+    if(front != NULL) {
+      front->clipTo(tree, alsoRemoveCoplanarFront);
+    }
+    if(back != NULL) {
+      back->clipTo(tree, alsoRemoveCoplanarFront);
+    }
+  }
+
+  void Node::clipPolygons(std::vector<PolygonTreeNode*> &polyTreeNodes, bool alsoRemoveCoplanarFront) {
+    std::vector<PolygonTreeNode*> frontNodes;
+    std::vector<PolygonTreeNode*> backNodes;
+
+    std::vector<PolygonTreeNode*>::iterator itr = polyTreeNodes.begin();
+
+    while(itr != polyTreeNodes.end()) {
+      PolygonTreeNode *node = (*itr);
+      if(!node->isRemoved()) {
+        node->splitByPlane(plane, alsoRemoveCoplanarFront ? backNodes : frontNodes, backNodes, frontNodes, backNodes);
+      }
+      ++itr;
+    }
+
+    if(front != NULL && frontNodes.size() > 0) {
+      front->clipPolygons(frontNodes);
+    }
+
+    if(back != NULL && backNodes.size() > 0) {
+      back->clipPolygons(backNodes);
+    } else {
+      std::vector<PolygonTreeNode*>::iterator backItr = backNodes.begin();
+
+      while(backItr != backNodes.end()) {
+        (*backItr)->remove();
+        ++backItr;
+      }
+    }
+  }
+
   Tree::Tree(const std::vector<Polygon> &polygons) {
+    addPolygons(polygons);
+  }
+
+  void Tree::addPolygons(const std::vector<Polygon> &polygons) {
     std::vector<Polygon>::const_iterator itr = polygons.begin();
 
     std::vector<PolygonTreeNode*> polyTreeNodes;
@@ -54,8 +116,25 @@ namespace csgjs {
     rootnode.addPolygonTreeNodes(polyTreeNodes);
   }
 
-  PolygonTreeNode::PolygonTreeNode() : parent(NULL), removed(false) {}
-  PolygonTreeNode::PolygonTreeNode(PolygonTreeNode *p, const Polygon &poly) : parent(p), polygon(poly), removed(false) {}
+  void Tree::invert() {
+    polygonTree.invert();
+    rootnode.invert();
+  }
+
+  void Tree::clipTo(Tree &tree, bool alsoRemoveCoplanarFront) {
+    rootnode.clipTo(tree, alsoRemoveCoplanarFront);
+  }
+
+  std::vector<Polygon> Tree::toPolygons() {
+    std::vector<Polygon> polygons;
+
+    polygonTree.getPolygons(polygons);
+
+    return polygons;
+  }
+
+  PolygonTreeNode::PolygonTreeNode() : parent(NULL), removed(false), valid(false) {}
+  PolygonTreeNode::PolygonTreeNode(PolygonTreeNode *p, const Polygon &poly) : parent(p), polygon(poly), removed(false), valid(true) {}
   PolygonTreeNode::~PolygonTreeNode() {
     std::vector<PolygonTreeNode*>::iterator itr = children.begin();
 
@@ -63,6 +142,30 @@ namespace csgjs {
       delete *itr;
       ++itr;
     }
+  }
+
+  void PolygonTreeNode::invalidate() {
+    valid = false;
+
+    if(parent != NULL) {
+      parent->invalidate();
+    }
+  }
+
+  void PolygonTreeNode::remove() {
+#ifdef CSGJS_DEBUG
+    if(isRootNode()) {
+      throw std::runtime_error("trying to delete root node");
+    }
+    if(children.size() > 0) {
+      throw std::runtime_error("trying to delete node with children");
+    }
+#endif
+
+    parent->children.erase(std::remove(parent->children.begin(), parent->children.end(), this), parent->children.end());
+    parent->invalidate();
+
+    //delete this;
   }
 
   PolygonTreeNode* PolygonTreeNode::addChild(const Polygon &polygon) {
@@ -120,7 +223,6 @@ namespace csgjs {
 
     Vector3 planeNormal = plane.normal;
     csgjs_real d = planeNormal.dot(sphereCenter) - plane.w;
-//    std::cout << d << " (" << sphereRadius << "," << sphereCenter << ") " << polygon << plane << std::endl;
     if(d > sphereRadius) {
       frontNodes.push_back(this);
     } else if(d < -sphereRadius) {
@@ -128,6 +230,26 @@ namespace csgjs {
     } else {
       splitPolygonByPlane(plane, coplanarFrontNodes, coplanarBackNodes, frontNodes, backNodes);
     }
+  }
+
+  void PolygonTreeNode::invertRecurse() {
+    if(valid) {
+      polygon = polygon.flipped();
+    }
+    std::vector<PolygonTreeNode*>::iterator itr = children.begin();
+    while(itr != children.end()) {
+      (*itr)->invertRecurse();
+      ++itr;
+    }
+  }
+
+  void PolygonTreeNode::invert() {
+#ifdef CSGJS_DEBUG
+    if(!isRootNode()) {
+      throw std::runtime_error("can only call invert on root node");
+    }
+#endif
+    invertRecurse();
   }
 
   void PolygonTreeNode::splitPolygonByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes, 
@@ -248,6 +370,18 @@ namespace csgjs {
           PolygonTreeNode *node = addChild(Polygon(std::move(backVertices), polygon.plane));
           backNodes.push_back(node);
         }
+      }
+    }
+  }
+
+  void PolygonTreeNode::getPolygons(std::vector<Polygon> &polygons) const {
+    if(valid) {
+      polygons.push_back(polygon);
+    } else {
+      std::vector<PolygonTreeNode*>::const_iterator itr = children.begin();
+      while(itr != children.end()) {
+        (*itr)->getPolygons(polygons);
+        ++itr;
       }
     }
   }

@@ -33,6 +33,19 @@ namespace csgjs {
 
   Polygon::Polygon() : _boundingSphereCacheValid(false), _boundingBoxCacheValid(false) {}
 
+  Polygon Polygon::flipped() const {
+    std::vector<Vertex> newVertices;
+    Plane newPlane = plane.flipped();
+
+    std::vector<Vertex>::const_reverse_iterator itr = vertices.rbegin();
+    while(itr != vertices.rend()) {
+      newVertices.push_back(itr->flipped());
+      ++itr;
+    }
+
+    return Polygon(std::move(newVertices), newPlane);
+  }
+
   bool Polygon::checkIfConvex() const {
     int numVertices = vertices.size();
     if(numVertices > 2) {

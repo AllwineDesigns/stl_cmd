@@ -3,7 +3,7 @@
 
 typedef double csgjs_real;
 
-#define CSGJS_DEBUG
+//#define CSGJS_DEBUG
 const csgjs_real EPS = .00001;
 const csgjs_real NEG_EPS = -EPS;
 const csgjs_real EPS_SQUARED = EPS*EPS;

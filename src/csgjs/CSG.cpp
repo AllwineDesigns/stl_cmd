@@ -1,9 +1,10 @@
 #include "CSG.h"
+#include "Trees.h"
 
 namespace csgjs {
   CSG::CSG() : _boundingBoxCacheValid(false), _isCanonicalized(true), _isRetesselated(true) {}
-  CSG::CSG(const std::vector<Polygon> &p, bool c, bool r) : _polygons(p), _boundingBoxCacheValid(false), _isCanonicalized(c), _isRetesselated(r) { std::cout << "copied" << std::endl;}
-  CSG::CSG(std::vector<Polygon> &&p, bool c, bool r) : _polygons(p), _boundingBoxCacheValid(false), _isCanonicalized(c), _isRetesselated(r) { std::cout << "moved" << std::endl;}
+  CSG::CSG(const std::vector<Polygon> &p, bool c, bool r) : _polygons(p), _boundingBoxCacheValid(false), _isCanonicalized(c), _isRetesselated(r) { }
+  CSG::CSG(std::vector<Polygon> &&p, bool c, bool r) : _polygons(p), _boundingBoxCacheValid(false), _isCanonicalized(c), _isRetesselated(r) { }
 
   std::vector<Polygon> CSG::toPolygons() const {
     return _polygons;
@@ -12,10 +13,63 @@ namespace csgjs {
   CSG CSG::csgUnion(const CSG &csg, bool retesselate, bool canonicalize) const {
     if(!mayOverlap(csg)) {
       return unionForNonIntersecting(csg);
-    } else {
     }
 
-    return CSG();
+    Tree A(_polygons);
+    Tree B(csg._polygons);
+
+    A.clipTo(B);
+    B.clipTo(A);
+    B.invert();
+    B.clipTo(A);
+    B.invert();
+
+    std::vector<Polygon> aPolys(A.toPolygons());
+    std::vector<Polygon> bPolys(B.toPolygons());
+
+    aPolys.insert(aPolys.end(), bPolys.begin(), bPolys.end());
+
+    return CSG(std::move(aPolys));
+  }
+
+  CSG CSG::csgIntersect(const CSG &csg, bool retesselate, bool canonicalize) const {
+    if(!mayOverlap(csg)) {
+      return CSG();
+    }
+
+    Tree A(_polygons);
+    Tree B(csg._polygons);
+
+    A.invert();
+    B.clipTo(A);
+    B.invert();
+    A.clipTo(B);
+    B.clipTo(A);
+    A.addPolygons(B.toPolygons());
+    A.invert();
+
+    std::vector<Polygon> aPolys(A.toPolygons());
+
+    return CSG(std::move(aPolys));
+  }
+
+  CSG CSG::csgSubtract(const CSG &csg, bool retesselate, bool canonicalize) const {
+    if(!mayOverlap(csg)) {
+      return *this;
+    }
+
+    Tree A(_polygons);
+    Tree B(csg._polygons);
+
+    A.invert();
+    A.clipTo(B);
+    B.clipTo(A, true);
+    A.addPolygons(B.toPolygons());
+    A.invert();
+
+    std::vector<Polygon> aPolys(A.toPolygons());
+
+    return CSG(std::move(aPolys));
   }
 
   CSG CSG::unionForNonIntersecting(const CSG &csg) const {
@@ -58,7 +112,7 @@ namespace csgjs {
           _boundingBoxCache.second = bounds.second;
         } else {
           _boundingBoxCache.first = _boundingBoxCache.first.min(bounds.first);
-          _boundingBoxCache.second = _boundingBoxCache.second.min(bounds.second);
+          _boundingBoxCache.second = _boundingBoxCache.second.max(bounds.second);
         }
 
         ++itr;

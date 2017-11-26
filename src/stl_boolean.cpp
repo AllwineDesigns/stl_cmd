@@ -1,6 +1,6 @@
 /*
 
-Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
+Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
     This file is part of stl_cmd.
 
@@ -24,86 +24,8 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include <string.h>
 #include <iostream>
 
-#include "csgjs.cpp"
-#include "stl_util.h"
-
-void ReadModel(const char *filename, csgjs_model& model) {
-    FILE *f;
-
-    f = fopen(filename, "rb");
-
-    char header[80];
-    uint32_t num_tris;
-    fread(header, 80, 1, f);
-    fread(&num_tris, 4, 1, f);
-
-    uint16_t abc;
-    int index = 0;
-    for(int i = 0; i < num_tris; i++) {
-        csgjs_vertex vertex1;
-        csgjs_vertex vertex2;
-        csgjs_vertex vertex3;
-
-        fread(&vertex1.normal, 12, 1, f);
-        fread(&vertex1.pos, 12, 1, f);
-        fread(&vertex2.pos, 12, 1, f);
-        fread(&vertex3.pos, 12, 1, f);
-        fread(&abc, 2, 1, f);
-
-        vertex2.normal = vertex1.normal;
-        vertex3.normal = vertex1.normal;
-
-        model.vertices.push_back(vertex3);
-        model.vertices.push_back(vertex2);
-        model.vertices.push_back(vertex1);
-        model.indices.push_back(index+2);
-        model.indices.push_back(index+1);
-        model.indices.push_back(index);
-        index += 3;
-    }
-    fclose(f);
-}
-
-void WriteModel(const char *filename, csgjs_model& model) {
-    FILE *f;
-
-    f = fopen(filename, "wb");
-
-    char header[80] = {0};
-    strncpy(header, "Created with stl_boolean", 80);
-    fwrite(header, 80, 1, f);
-
-    uint32_t num_tris;
-
-    num_tris = model.indices.size()/3;
-    fwrite(&num_tris, 4, 1, f);
-
-    uint16_t abc = 0;
-
-    for(int i = 0; i < num_tris; i++) {
-        vec p1,p2,p3;
-
-        int index1 = model.indices[3*i+0];
-        int index2 = model.indices[3*i+1];
-        int index3 = model.indices[3*i+2];
-
-        p1.x = model.vertices[index1].pos.x;
-        p1.y = model.vertices[index1].pos.y;
-        p1.z = model.vertices[index1].pos.z;
-
-        p2.x = model.vertices[index2].pos.x;
-        p2.y = model.vertices[index2].pos.y;
-        p2.z = model.vertices[index2].pos.z;
-
-        p3.x = model.vertices[index3].pos.x;
-        p3.y = model.vertices[index3].pos.y;
-        p3.z = model.vertices[index3].pos.z;
-
-        write_tri(f, &p1, &p2, &p3, 1);
-    }
-
-    fclose(f);
-}
+#include "csgjs/CSG.h"
+#include "csgjs/util.h"
 
 void print_usage() {
     fprintf(stderr, "usage: stl_boolean -a <stl file A> -b <stl file B> [ -i ] [ -u ] [ -d ] <output file>\n");
@@ -179,22 +101,16 @@ int main(int argc, char **argv)
 
     char *out_filename = argv[optind];
 
-    csgjs_model model_a;
-    csgjs_model model_b;
-
-    ReadModel(a_file, model_a);
-    ReadModel(b_file, model_b);
+    csgjs::CSG A(csgjs::ReadSTLFile(a_file));
+    csgjs::CSG B(csgjs::ReadSTLFile(b_file));
 
     if(unionAB) {
-        csgjs_model m = csgjs_union(model_a, model_b);
-        WriteModel(out_filename, m);
+      csgjs::WriteSTLFile(out_filename, A.csgUnion(B).toPolygons());
     }
     if(intersection) {
-        csgjs_model m = csgjs_intersection(model_a, model_b);
-        WriteModel(out_filename, m);
+      csgjs::WriteSTLFile(out_filename, A.csgIntersect(B).toPolygons());
     }
     if(difference) {
-        csgjs_model m = csgjs_difference(model_a, model_b);
-        WriteModel(out_filename, m);
+      csgjs::WriteSTLFile(out_filename, A.csgSubtract(B).toPolygons());
     }
 }

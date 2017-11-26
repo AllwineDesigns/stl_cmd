@@ -26,6 +26,8 @@ class CSG {
 
     std::vector<Polygon> toPolygons() const;
     CSG csgUnion(const CSG &csg, bool retesselate=false, bool canonicalize=false) const;
+    CSG csgIntersect(const CSG &csg, bool retesselate=false, bool canonicalize=false) const;
+    CSG csgSubtract(const CSG &csg, bool retesselate=false, bool canonicalize=false) const;
     bool mayOverlap(const CSG &csg) const;
     std::pair<Vector3, Vector3> getBounds() const;
 
