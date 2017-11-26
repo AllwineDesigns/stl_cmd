@@ -24,6 +24,10 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include <sys/stat.h>
 #include <math.h>
 
+#ifndef M_PI
+#define M_PI 3.141592653589793
+#endif
+
 #define EPSILON 0.0001f
 
 int is_valid_binary_stl(char* filename) {

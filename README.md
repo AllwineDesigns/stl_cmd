@@ -79,6 +79,14 @@ Outputs a binary STL file of a cube with the provided width. If no output file i
 Outputs an stl file of a sphere with the provided radius and number of segments.
 If the radius is omitted, it defaults to 1. If longitudinal segments is omitted, it defaults to 32. If latitudinal segments is omitted, it defaults to half the longitudinal segments. If no output file is provided, data is sent to stdout.
 
+### stl_cylinder 
+
+    stl_cylinder [-r <radius> ] [-h <height>] [ -s <segments> ] [ <output file> ]
+
+Outputs an stl file of a cylinder with the provided radius, height and number of segments.
+If the radius or height are omitted, they default to 1. If segments is omitted, it defaults to 32. If no output file is provided, data is sent to stdout.
+
+
 ### stl_merge
 
     stl_merge [ -o <output file> ] [ <input file> ... ]
@@ -137,13 +145,17 @@ Future commands
 
 These are ideas for future commands that may make it into the stl_cmd suite.
 
-### stl_cylinder 
-
-    Generate an STL file with a single cylinder in it.
-
 ### stl_cone 
 
     Generate an STL file with a single cone in it.
+
+### stl_torus 
+
+    Generate an STL file with a single torus in it.
+
+### stl_decimate 
+
+    Simplify an STL file while preserving its shape.
 
 ### stl_twist
 

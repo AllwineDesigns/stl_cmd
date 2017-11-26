@@ -31,7 +31,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 void print_usage() {
     fprintf(stderr, "usage: stl_cube [-w <width>] [ <output file> ]\n");
     fprintf(stderr, "    Outputs an stl file of a cube with the provided width. ");
-    fprintf(stderr, "    If the width is omitted, it defaults to 1. If not output file is provided, data is sent to stdout. \n");
+    fprintf(stderr, "    If the width is omitted, it defaults to 1. If no output file is provided, data is sent to stdout. \n");
 }
 
 int main(int argc, char** argv) {
