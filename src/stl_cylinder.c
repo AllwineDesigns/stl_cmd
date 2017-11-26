@@ -30,7 +30,7 @@ Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
 void print_usage() {
     fprintf(stderr, "usage: stl_cylinder [ -r <radius> ] [ -h <height> ] [ -s <segments> ] [ <output file> ]\n");
-    fprintf(stderr, "    Outputs an stl file of a cylinder with the provided radius, height and number of segments to approximate a circle. ");
+    fprintf(stderr, "    Outputs an stl file of a cylinder with the provided radius, height and number of segments to approximate a circle.\n");
     fprintf(stderr, "    If the radius or height are omitted, they default to 1. If segments is omitted, it defaults to 32. If no output file is provided, data is sent to stdout. \n");
 }
 

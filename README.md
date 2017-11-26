@@ -86,6 +86,12 @@ If the radius is omitted, it defaults to 1. If longitudinal segments is omitted,
 Outputs an stl file of a cylinder with the provided radius, height and number of segments.
 If the radius or height are omitted, they default to 1. If segments is omitted, it defaults to 32. If no output file is provided, data is sent to stdout.
 
+### stl_cone 
+
+    stl_cone [-r <radius> ] [-t <top radius>] [-h <height>] [ -s <segments> ] [ <output file> ]
+
+Outputs an stl file of a cone with the provided radius, top radius, height and number of segments.
+If the radius or height are omitted, they default to 1. If top radius is omittted, it defaults to 0. If top radius is greater than 0, it outputs a truncated cone. If segments is omitted, it defaults to 32. If no output file is provided, data is sent to stdout.
 
 ### stl_merge
 
@@ -145,13 +151,17 @@ Future commands
 
 These are ideas for future commands that may make it into the stl_cmd suite.
 
-### stl_cone 
-
-    Generate an STL file with a single cone in it.
-
 ### stl_torus 
 
     Generate an STL file with a single torus in it.
+
+### stl_layout
+
+    Layout a number of stl files on the Z = 0 plane, possibly even attempting to find the flattest side to place each file on.
+
+### stl_zero
+
+    Similar to stl_layout, but simply places the bottom most points of the model on the Z = 0 plane and centers the model in X and Y.
 
 ### stl_decimate 
 
