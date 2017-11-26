@@ -93,6 +93,14 @@ If the radius or height are omitted, they default to 1. If segments is omitted, 
 Outputs an stl file of a cone with the provided radius, top radius, height and number of segments.
 If the radius or height are omitted, they default to 1. If top radius is omittted, it defaults to 0. If top radius is greater than 0, it outputs a truncated cone. If segments is omitted, it defaults to 32. If no output file is provided, data is sent to stdout.
 
+### stl_torus 
+
+    stl_torus [-o <outer radius> ] [-i <inner radius>] [ -s <segments> ] [ -c <cross sectional segments> ] [ <output file> ]
+
+Outputs an stl file of a torus with the provided inner radius, outter radius, and number of segments.
+If the inner radius is omitted, it defaults to .5. If outer radius is omittted, it defaults to 1. If segments is omitted, it defaults to 32. If cross sectional segments is omitted, it defaults to half the segments. If no output file is provided, data is sent to stdout.
+
+
 ### stl_merge
 
     stl_merge [ -o <output file> ] [ <input file> ... ]
@@ -151,17 +159,21 @@ Future commands
 
 These are ideas for future commands that may make it into the stl_cmd suite.
 
-### stl_torus 
-
-    Generate an STL file with a single torus in it.
-
 ### stl_layout
 
     Layout a number of stl files on the Z = 0 plane, possibly even attempting to find the flattest side to place each file on.
 
-### stl_zero
+### stl_zero or stl_center
 
-    Similar to stl_layout, but simply places the bottom most points of the model on the Z = 0 plane and centers the model in X and Y.
+    Centers the STL file, with options to put the bottom of the model on the Z = 0 plane.
+
+### stl_segments 
+
+    Extrude a circle or sweep a sphere along a piecewise linear curve.
+
+### stl_bezier
+
+    Extrude a circle or sweep a sphere along a Bezier curve (would probably approximate the Bezier with some number of linear segments and use the same algorithm as stl_segments).
 
 ### stl_decimate 
 

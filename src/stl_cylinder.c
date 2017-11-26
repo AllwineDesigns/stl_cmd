@@ -100,6 +100,9 @@ int main(int argc, char** argv) {
     for(int i = 0; i < segments; i++) {
       float angle = 2*M_PI*i/segments;
       float angle2 = 2*M_PI*(i+1)/segments;
+      if(i == segments-1) {
+        angle2 = 0;
+      }
       float cosa = cos(angle);
       float sina = sin(angle);
 
