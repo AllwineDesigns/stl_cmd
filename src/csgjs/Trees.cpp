@@ -27,9 +27,12 @@ namespace csgjs {
     std::vector<PolygonTreeNode*> frontNodes;
     std::vector<PolygonTreeNode*> backNodes;
 
-    int pick = fastRandom(polyTreeNodes.size());
-//    int pick = 0;
-    plane = polyTreeNodes[pick]->getPolygon().plane;
+    if(polyTreeNodes.size() > 0) {
+      int pick = fastRandom(polyTreeNodes.size());
+  //    int pick = 0;
+
+      plane = polyTreeNodes[pick]->getPolygon().plane;
+    }
 
     std::vector<PolygonTreeNode*>::const_iterator itr = polyTreeNodes.begin();
     while(itr != polyTreeNodes.end()) {
@@ -162,10 +165,13 @@ namespace csgjs {
     }
 #endif
 
-    parent->children.erase(std::remove(parent->children.begin(), parent->children.end(), this), parent->children.end());
-    parent->invalidate();
+    invalidate();
 
+    // Can't delete this without removing pointers in BSP Node objects as well, if we remove from parent's children vector, we'll be creating a memory leak
+    // Maybe use some kind of smart pointer so we can remove them here
+    //parent->children.erase(std::remove(parent->children.begin(), parent->children.end(), this), parent->children.end());
     //delete this;
+
   }
 
   PolygonTreeNode* PolygonTreeNode::addChild(const Polygon &polygon) {
@@ -203,7 +209,9 @@ namespace csgjs {
         ++itr;
       }
     } else {
-      splitLeafByPlane(plane, coplanarFrontNodes, coplanarBackNodes, frontNodes, backNodes);
+      if(valid) {
+        splitLeafByPlane(plane, coplanarFrontNodes, coplanarBackNodes, frontNodes, backNodes);
+      }
     }
   }
 

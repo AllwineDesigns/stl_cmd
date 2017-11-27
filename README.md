@@ -157,37 +157,45 @@ Future commands
 
 These are ideas for future commands that may make it into the stl_cmd suite.
 
+### stl_area
+
+Calculate the surface area of STL files (could be used for price or print time approximations)
+
+### stl_volume
+
+Calculate the volume of STL files (could used for price or print time approximations)
+
 ### stl_layout
 
-    Layout a number of stl files on the Z = 0 plane, possibly even attempting to find the flattest side to place each file on.
+Layout a number of stl files on the Z = 0 plane, possibly even attempting to find the flattest side to place each file on.
 
 ### stl_zero or stl_center
 
-    Centers the STL file, with options to put the bottom of the model on the Z = 0 plane.
+Centers the STL file, with options to put the bottom of the model on the Z = 0 plane.
 
 ### stl_segments 
 
-    Extrude a circle or sweep a sphere along a piecewise linear curve.
+Extrude a circle or sweep a sphere along a piecewise linear curve.
 
 ### stl_bezier
 
-    Extrude a circle or sweep a sphere along a Bezier curve (would probably approximate the Bezier with some number of linear segments and use the same algorithm as stl_segments).
+Extrude a circle or sweep a sphere along a Bezier curve (would probably approximate the Bezier with some number of linear segments and use the same algorithm as stl_segments).
 
 ### stl_decimate 
 
-    Simplify an STL file while preserving its shape.
+Simplify an STL file while preserving its shape.
 
 ### stl_twist
 
-    Deform an STL file by twisting it.
+Deform an STL file by twisting it.
 
 ### stl_bend
 
-    Deform an STL file by bending it.
+Deform an STL file by bending it.
 
 ### stl_noise
 
-    Deform an STL file by displacing vertices using noise.
+Deform an STL file by displacing vertices using noise.
 
 Teaching
 --------
