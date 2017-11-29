@@ -21,6 +21,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
 #ifndef ___STL_UTIL_H___
 
+#include <stdint.h>
 #include <sys/stat.h>
 #include <math.h>
 

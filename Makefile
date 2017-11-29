@@ -1,12 +1,12 @@
 BIN_DIR := bin
 CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube stl_sphere stl_cylinder stl_cone stl_torus stl_empty stl_threads stl_normals)
 
-CC := gcc
-CFLAGS=-O3
+CC := g++
+CFLAGS=-O3 
 CCPP := g++
 CPPFLAGS=-std=c++11
 
-all: $(CMDS) bin/stl_boolean bin/stl_csg
+all: $(CMDS) bin/stl_boolean
 
 $(BIN_DIR)/%: src/%.c src/stl_util.h
 	$(CC) $(CFLAGS) $(OUTPUT_OPTION) $<
