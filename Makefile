@@ -4,7 +4,7 @@ CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl
 CC := g++
 CFLAGS=-O3 
 CCPP := g++
-CPPFLAGS=-std=c++11
+CPPFLAGS=-std=c++0x
 
 all: $(CMDS) bin/stl_boolean
 

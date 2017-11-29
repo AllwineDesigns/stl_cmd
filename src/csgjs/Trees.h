@@ -91,7 +91,7 @@ namespace csgjs {
       std::vector<Polygon> toPolygons();
 
       friend std::ostream& operator<<(std::ostream& os, const Tree &tree);
-      friend Node;
+      friend class Node;
   };
 }
 
