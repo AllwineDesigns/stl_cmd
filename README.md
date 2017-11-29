@@ -9,6 +9,9 @@ Getting started
     git clone https://github.com/frknsweetapps/stl_cmd.git
     cd stl_cmd
     make
+    make install # will install to /usr/local/bin by default
+    
+    make DESTDIR=/some/other/path install # will install to /some/other/path/bin
 
 The stl_cmds will be compiled and placed in the bin/ directory in the root of the stl_cmd repo. Add it to your path and you can perform the following commands.
 
