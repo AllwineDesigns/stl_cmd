@@ -37,29 +37,9 @@ Set the header of your STL file to contain copyright information.
 STL Commands
 ------------
 
-### stl_header
+## Geometry Generators 
 
-    stl_header [-s <header>] [-o <output file>] <input file>
-
-Prints or sets the data in the header section of a binary STL file. The header section is rarely used, but can store a small amount of data (80 characters). Copyright info or a very brief description are some possibilities.
-
-### stl_count
-
-    stl_count [ <input file> ]
-
-Prints the number of triangles in the provided binary STL file. If no input file is provided, data is read from stdin.
-
-### stl_normals
-
-    stl_normals [ -v ] [ -c ] [ -r ] [ <input file> ] [ <out file> ]
-
-Compares normals stored in input file with normals calculated from the vertex ordering. Provided flags can tell stl_normals to fix the normals or reverse the point ordering.
-
-### stl_bbox
-
-    stl_bbox <input file>
-
-Prints bounding box information about the provided binary STL file.
+The following commands create STL files.
 
 ### stl_empty
 
@@ -101,6 +81,69 @@ If the radius or height are omitted, they default to 1. If top radius is omittte
 Outputs an stl file of a torus with the provided inner radius, outter radius, and number of segments.
 If the inner radius is omitted, it defaults to .5. If outer radius is omittted, it defaults to 1. If segments is omitted, it defaults to 32. If cross sectional segments is omitted, it defaults to half the segments. If no output file is provided, data is sent to stdout.
 
+### stl_threads
+
+    stl_threads [ -f ] [ -D <diameter> ] [ -P <pitch> ] [ -a <angle> ] 
+                [ -h <height> ] [ -s <segments> ] <output file>
+
+Outputs an stl file with male or female screw threads per the [ISO metric
+screw thread standard](http://en.wikipedia.org/wiki/ISO_metric_screw_thread).
+
+    -f            - Outputs female threads (defaults to male).
+    -D <diameter> - Changes to major diameter of the threads.
+    -P <pitch>    - Changes the height of a single thread, aka the pitch per 
+                    the ISO metric standard.
+    -h <height>   - Changes the total height of the threads.
+    -a <angle>    - Changes the thread angle (degrees). The standard (and 
+                    default) is 60 degrees. For 3D printing this can cause 
+                    overhang issues as 60 degrees results in a 30 degree 
+                    angle with the ground plane. Setting to 90 degrees 
+                    results in a 45 degree angle with the ground plane.
+    -s <segments> - Changes the resolution of the generated STL file. More 
+                    segments yields finer resolution. <segments> is the 
+                    number of segments to approximate a circle. Defaults to 
+                    72 (every 5 degrees).
+
+## Informational
+
+The following commands display information about STL files. In some cases, they
+make modifications to the STL files related to that information.
+
+### stl_header
+
+    stl_header [-s <header>] [-o <output file>] <input file>
+
+Prints or sets the data in the header section of a binary STL file. The header section is rarely used, but can store a small amount of data (80 characters). Copyright info or a very brief description are some possibilities.
+
+### stl_count
+
+    stl_count [ <input file> ]
+
+Prints the number of triangles in the provided binary STL file. If no input file is provided, data is read from stdin.
+
+### stl_normals
+
+    stl_normals [ -v ] [ -c ] [ -r ] [ <input file> ] [ <out file> ]
+
+Compares normals stored in input file with normals calculated from the vertex ordering. Provided flags can tell stl_normals to fix the normals or reverse the point ordering.
+
+### stl_bbox
+
+    stl_bbox <input file>
+
+Prints bounding box information about the provided binary STL file.
+
+### stl_convex 
+
+    stl_convex [ -v ] <input file>
+
+Determines whether an STL file is a convex polyheda by calculating Euler's characteristic.
+Prints convex if the STL file is convex, or not convex otherwise. If the -v flag is used
+a verbose message is printed that shows the calculation.
+
+## Modifiers
+
+These commands modify existing STL files.
 
 ### stl_merge
 
@@ -124,29 +167,6 @@ Performs any number of transformations in the order listed on the command line. 
     -tx <x> - translates <x> units in x
     -ty <y> - translates <y> units in y
     -tz <z> - translates <z> units in z
-
-### stl_threads
-
-    stl_threads [ -f ] [ -D <diameter> ] [ -P <pitch> ] [ -a <angle> ] 
-                [ -h <height> ] [ -s <segments> ] <output file>
-
-Outputs an stl file with male or female screw threads per the [ISO metric
-screw thread standard](http://en.wikipedia.org/wiki/ISO_metric_screw_thread).
-
-    -f            - Outputs female threads (defaults to male).
-    -D <diameter> - Changes to major diameter of the threads.
-    -P <pitch>    - Changes the height of a single thread, aka the pitch per 
-                    the ISO metric standard.
-    -h <height>   - Changes the total height of the threads.
-    -a <angle>    - Changes the thread angle (degrees). The standard (and 
-                    default) is 60 degrees. For 3D printing this can cause 
-                    overhang issues as 60 degrees results in a 30 degree 
-                    angle with the ground plane. Setting to 90 degrees 
-                    results in a 45 degree angle with the ground plane.
-    -s <segments> - Changes the resolution of the generated STL file. More 
-                    segments yields finer resolution. <segments> is the 
-                    number of segments to approximate a circle. Defaults to 
-                    72 (every 5 degrees).
 
 ### stl_boolean 
 

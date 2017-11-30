@@ -2,7 +2,7 @@ prefix?=/usr/local
 target=$(DESTDIR)$(prefix)
 
 BIN_DIR := bin
-CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube stl_sphere stl_cylinder stl_cone stl_torus stl_empty stl_threads stl_normals)
+CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube stl_sphere stl_cylinder stl_cone stl_torus stl_empty stl_threads stl_normals stl_convex)
 
 CC := g++
 CFLAGS=-O3 
@@ -11,7 +11,7 @@ CPPFLAGS=-std=c++0x
 
 all: $(CMDS) bin/stl_boolean
 
-$(BIN_DIR)/%: src/%.c src/stl_util.h
+$(BIN_DIR)/%: src/%.cpp src/stl_util.h
 	$(CC) $(CFLAGS) $(OUTPUT_OPTION) $<
 
 bin/stl_boolean: src/stl_boolean.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp src/csgjs/math/*.h src/csgjs/*.h
