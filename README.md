@@ -11,7 +11,9 @@ Getting started
     make
     make install # will install to /usr/local/bin by default
     
-    make DESTDIR=/some/other/path install # will install to /some/other/path/bin
+    make prefix=/some/other/path install # will install to /some/other/path/bin
+    make DESTDIR=/some/other/path install # will install to /some/other/path/usr/local/bin
+    make DESTDIR=/some/other/path prefix=/usr # will install to /some/other/path/usr/bin
 
 The stl_cmds will be compiled and placed in the bin/ directory in the root of the stl_cmd repo. Add it to your path and you can perform the following commands.
 
