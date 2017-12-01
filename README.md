@@ -143,6 +143,12 @@ Determines whether an STL file is a convex polyheda by calculating Euler's chara
 Prints convex if the STL file is convex, or not convex otherwise. If the -v flag is used
 a verbose message is printed that shows the calculation.
 
+### stl_borders 
+
+    stl_borders <input file>
+
+Outputs the number of border edges in the STL files. This should be 0 for fully enclosed meshes. If the output is greater than 0, the mesh has holes in it.
+
 ## Modifiers
 
 These commands modify existing STL files.
@@ -181,6 +187,10 @@ Future commands
 ---------------
 
 These are ideas for future commands that may make it into the stl_cmd suite.
+
+### stl_hull
+
+Compute the convex hull of the input STL files.
 
 ### stl_area
 
