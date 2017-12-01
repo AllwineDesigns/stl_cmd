@@ -147,7 +147,7 @@ a verbose message is printed that shows the calculation.
 
     stl_borders <input file>
 
-Outputs the number of border edges in the STL files. This should be 0 for fully enclosed meshes. If the output is greater than 0, the mesh has holes in it.
+Outputs the number of border edges in the STL files. This should be 0 for maniforld meshes. If the output is greater than 0, the mesh has holes in it or has non-manifold edges.
 
 ## Modifiers
 
