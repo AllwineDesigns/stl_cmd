@@ -21,7 +21,7 @@ namespace csgjs {
   }
 
   bool Line::operator==(const Line &l) const {
-    return (l.direction-direction).lengthSquared() <= EPS_SQUARED && (l.point-point).lengthSquared() <= EPS_SQUARED;
+    return (l.direction-direction).length() <= EPS && (l.point-point).length() <= EPS;
   }
 
   Line Line::fromPoints(const Vector3 &p1, const Vector3 &p2) {
