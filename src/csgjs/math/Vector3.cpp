@@ -101,7 +101,7 @@ namespace csgjs {
     return Vector3(std::abs(x), std::abs(y), std::abs(z));
   }
 
-  Vector3 Vector3::randomNonParallelVector() const {
+  Vector3 Vector3::nonParallelVector() const {
     Vector3 abs = this->abs();
     if(abs.x <= abs.y && abs.x <= abs.z) {
       return Vector3(1,0,0);

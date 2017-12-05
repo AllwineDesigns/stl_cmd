@@ -32,7 +32,7 @@ struct Vector3 {
   bool operator==(const Vector3 &a) const;
   Vector3 transform(const Matrix4x4 &m, csgjs_real w=1) const;
   Vector3 abs() const;
-  Vector3 randomNonParallelVector() const;
+  Vector3 nonParallelVector() const;
   Vector3 min(const Vector3 &v) const;
   Vector3 max(const Vector3 &v) const;
 };

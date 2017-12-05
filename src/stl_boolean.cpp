@@ -105,12 +105,21 @@ int main(int argc, char **argv)
     csgjs::CSG B(csgjs::ReadSTLFile(b_file));
 
     if(unionAB) {
-      csgjs::WriteSTLFile(out_filename, A.csgUnion(B).toPolygons());
+      csgjs::CSG csg = A.csgUnion(B);
+      csg.canonicalize();
+      csg.makeManifold();
+      csgjs::WriteSTLFile(out_filename, csg.toPolygons());
     }
     if(intersection) {
-      csgjs::WriteSTLFile(out_filename, A.csgIntersect(B).toPolygons());
+      csgjs::CSG csg = A.csgIntersect(B);
+      csg.canonicalize();
+      csg.makeManifold();
+      csgjs::WriteSTLFile(out_filename, csg.toPolygons());
     }
     if(difference) {
-      csgjs::WriteSTLFile(out_filename, A.csgSubtract(B).toPolygons());
+      csgjs::CSG csg = A.csgSubtract(B);
+      csg.canonicalize();
+      csg.makeManifold();
+      csgjs::WriteSTLFile(out_filename, csg.toPolygons());
     }
 }

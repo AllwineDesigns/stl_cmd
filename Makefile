@@ -14,7 +14,7 @@ all: $(CMDS) bin/stl_boolean
 $(BIN_DIR)/%: src/%.cpp src/stl_util.h
 	$(CC) $(CFLAGS) $(OUTPUT_OPTION) $<
 
-bin/stl_boolean: src/stl_boolean.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp src/csgjs/math/*.h src/csgjs/*.h
+$(BIN_DIR)/stl_boolean: src/stl_boolean.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp src/csgjs/math/*.h src/csgjs/*.h
 	$(CCPP) $(CFLAGS) $(CPPFLAGS) src/stl_boolean.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp -Isrc -o bin/stl_boolean 
 
 $(CMDS): | $(BIN_DIR)

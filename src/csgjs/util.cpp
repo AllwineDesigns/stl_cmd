@@ -1,10 +1,12 @@
 #ifndef __CSGJS_UTIL__
 #define __CSGJS_UTIL__
 
-#include "math/Polygon3.h"
+#include "csgjs/math/Polygon3.h"
 #include "stl_util.h"
 #include <vector>
 #include <stdio.h>
+#include <unordered_map>
+#include "csgjs/math/HashKeys.h"
 
 namespace csgjs {
 
@@ -68,6 +70,8 @@ namespace csgjs {
       ++itr;
     }
 
+    std::unordered_map<VertexKey, Vector3> vertexLookup;
+
     fwrite(&num_tris, 4, 1, outf);
 
     uint16_t abc = 0;
@@ -78,17 +82,34 @@ namespace csgjs {
       vec p0;
       vec p1;
 
+      Vector3 vertex0 = itr->vertices[0].pos;
+      Vector3 vertex1 = itr->vertices[1].pos;
+
+      VertexKey key0(vertex0);
+      VertexKey key1(vertex1);
+
+      if(vertexLookup.count(key0) > 0) {
+        vertex0 = vertexLookup[key0];
+      } else {
+        vertexLookup[key0] = vertex0;
+      }
+      if(vertexLookup.count(key1) > 0) {
+        vertex1 = vertexLookup[key1];
+      } else {
+        vertexLookup[key1] = vertex1;
+      }
+
       normal.x = (float)itr->plane.normal.x;
       normal.y = (float)itr->plane.normal.y;
       normal.z = (float)itr->plane.normal.z;
 
-      p0.x = (float)itr->vertices[0].pos.x;
-      p0.y = (float)itr->vertices[0].pos.y;
-      p0.z = (float)itr->vertices[0].pos.z;
+      p0.x = (float)vertex0.x;
+      p0.y = (float)vertex0.y;
+      p0.z = (float)vertex0.z;
 
-      p1.x = (float)itr->vertices[1].pos.x;
-      p1.y = (float)itr->vertices[1].pos.y;
-      p1.z = (float)itr->vertices[1].pos.z;
+      p1.x = (float)vertex1.x;
+      p1.y = (float)vertex1.y;
+      p1.z = (float)vertex1.z;
 
       int numVertices = itr->vertices.size();
       for(int i = 2; i < numVertices; i++) {
@@ -96,9 +117,17 @@ namespace csgjs {
 
         vec p2;
 
-        p2.x = (float)itr->vertices[i].pos.x;
-        p2.y = (float)itr->vertices[i].pos.y;
-        p2.z = (float)itr->vertices[i].pos.z;
+        Vector3 vertex2 = itr->vertices[i].pos;
+        VertexKey key2(vertex2);
+        if(vertexLookup.count(key2) > 0) {
+          vertex2 = vertexLookup[key2];
+        } else {
+          vertexLookup[key2] = vertex2;
+        }
+
+        p2.x = (float)vertex2.x;
+        p2.y = (float)vertex2.y;
+        p2.z = (float)vertex2.z;
 
         fwrite(&p0, 1, 12, outf);
         fwrite(&p1, 1, 12, outf);

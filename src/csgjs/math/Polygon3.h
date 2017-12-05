@@ -36,10 +36,22 @@ class Polygon {
     mutable std::pair<Vector3, Vector3> _boundingBoxCache;
 };
 
-std::ostream& operator<<(std::ostream& os, const Polygon &poly);
+struct PolygonEdgeData {
+  Polygon *polygon;
 
+  Vector3 first;
+  Vector3 second;
+
+  PolygonEdgeData();
+  PolygonEdgeData(Polygon *p, const Vector3 &a, const Vector3 &b);
+};
+
+
+std::ostream& operator<<(std::ostream& os, const Polygon &poly);
 std::ostream& operator<<(std::ostream& os, const std::pair<Vector3, Vector3> &bounds);
 std::ostream& operator<<(std::ostream& os, const std::pair<Vector3, csgjs_real> &bounds);
+
+std::ostream& operator<<(std::ostream& os, const std::vector<Vertex> &vertices);
 
 }
 

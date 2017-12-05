@@ -125,6 +125,12 @@ namespace csgjs {
     return _boundingSphereCache;
   }
 
+  PolygonEdgeData::PolygonEdgeData() : polygon(NULL) {
+  }
+
+  PolygonEdgeData::PolygonEdgeData(Polygon *p, const Vector3 &a, const Vector3 &b) : polygon(p), first(a), second(b) {
+  }
+
   std::ostream& operator<<(std::ostream& os, const Polygon &poly) {
     os << "Polygon - vertices: { ";
 
@@ -149,6 +155,15 @@ namespace csgjs {
 
   std::ostream& operator<<(std::ostream& os, const std::pair<Vector3, csgjs_real> &bounds) {
     os << bounds.first << " - " << bounds.second;
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const std::vector<Vertex> &vertices) {
+    std::vector<Vertex>::const_iterator itr = vertices.begin();
+    while(itr != vertices.end()) {
+      os << itr->pos << " ";
+      ++itr;
+    }
     return os;
   }
 }

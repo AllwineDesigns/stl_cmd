@@ -23,7 +23,7 @@ struct Plane {
   Plane transform(const Matrix4x4 &m) const {
     bool ismirror = m.isMirroring();
 
-    Vector3 r = normal.randomNonParallelVector();
+    Vector3 r = normal.nonParallelVector();
     Vector3 u = normal.cross(r);
     Vector3 v = normal.cross(u);
 
@@ -72,16 +72,16 @@ struct Plane {
     Vector3 v1 = b-a;
     Vector3 v2 = c-a;
     if(v1.length() < EPS) {
-      v1 = v2.randomNonParallelVector();
+      v1 = v2.nonParallelVector();
     }
     if(v2.length() < EPS) {
-      v2 = v1.randomNonParallelVector();
+      v2 = v1.nonParallelVector();
     }
 
     Vector3 normal = v1.cross(v2);
     if(normal.length() < EPS) {
       // this means that v1 == -v2
-      v2 = v1.randomNonParallelVector();
+      v2 = v1.nonParallelVector();
       normal = v1.cross(v2);
     }
     normal = normal.unit();
