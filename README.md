@@ -149,6 +149,12 @@ a verbose message is printed that shows the calculation.
 
 Outputs the number of border edges in the STL files. This should be 0 for manifold meshes. If the output is greater than 0, the mesh has holes in it or has non-manifold edges.
 
+### stl_spreadsheet
+
+    stl_spreadsheet <input file>
+
+Outputs normal and position data for every triangle (normal, point1, point2 and point3 specified per row) in a tab delimited format that can be opened as a spreadsheet.
+
 ## Modifiers
 
 These commands modify existing STL files.
