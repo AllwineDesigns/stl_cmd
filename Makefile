@@ -2,10 +2,11 @@ prefix?=/usr/local
 target=$(DESTDIR)$(prefix)
 
 BIN_DIR := bin
-CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube stl_sphere stl_cylinder stl_cone stl_torus stl_empty stl_threads stl_normals stl_convex stl_borders)
+CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube stl_sphere stl_cylinder stl_cone stl_torus stl_empty stl_threads stl_normals stl_convex stl_borders stl_spreadsheet)
 
 CC := g++
-CFLAGS=-O3 
+#CFLAGS=-Og -g 
+CFLAGS=-O3
 CCPP := g++
 CPPFLAGS=-std=c++0x
 

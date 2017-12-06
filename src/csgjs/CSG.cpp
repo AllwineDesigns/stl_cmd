@@ -191,7 +191,8 @@ namespace csgjs {
     // 1. Create an empty set of edges, E. Iterate over every edge of every polygon, adding each to E if its reverse edge hasn't already been added or removing the reverse edge them if it has.
     //    This will leave only edges that don't have a matching edge (a neighboring polygon, with the same edge).
     // 2. Add all colinear edges in unmatchedEdges to its own list
-    // 3. Sort the vertices in each Line's set based on their position along the line
+    // 3. Iterate over each set of edges, creating a lookup table of start and end vertices for each edge.
+    //    Also, keep a sorted list of vertices based on their position along the line.
     // 4. Keep track of active edges while iterating over each vertex in order. An active edge is one where we've encountered it's first verex, but not it's second.
     // 5. For each vertex we encounter, split the currently active edges into 2 (edge A-------B will be come A----V----B, AB -> AV and VB), making sure to update the edge's corresponding polygon.
 
@@ -214,8 +215,10 @@ namespace csgjs {
     // 3.
     std::unordered_map<LineKey, std::vector<PolygonEdgeData*>>::iterator lineItr = edgesPerLine.begin();
 
+    int lineNum = 0;
+    //std::cout << edgesPerLine.size() << " lines" << std::endl;
     while(lineItr != edgesPerLine.end()) {
-      //std::cout << lineItr->first.line << " " << lineItr->second.size() << std::endl;
+      //std::cout << lineNum << " " << lineItr->first.line << " " << lineItr->second.size() << std::endl;
       // for each line
       // create lookup tables for the start and end of each edge based on vertex position
       std::unordered_map<VertexKey, std::vector<PolygonEdgeData*> > startVertex2PolygonEdgeData;
@@ -255,11 +258,25 @@ namespace csgjs {
       }
 
       //std::cout << "here" << std::endl;
-      std::set<VertexKeyDist>::iterator testItr = vertices.begin();
-      while(testItr != vertices.end()) {
-        //std::cout << testItr->key.hash << " " << testItr->key.v << " " << testItr->dist << std::endl;
-        ++testItr;
-      }
+      //std::set<VertexKeyDist>::iterator testItr = vertices.begin();
+      //while(testItr != vertices.end()) {
+      //  std::cout << testItr->key.hash << " " << testItr->key.v << " " << testItr->dist << std::endl;
+      //  ++testItr;
+      //}
+
+      //std::cout << "starting vertices " << std::endl;
+      //std::unordered_map<VertexKey, std::vector<PolygonEdgeData*> >::iterator startItr = startVertex2PolygonEdgeData.begin();
+      //while(startItr != startVertex2PolygonEdgeData.end()) {
+      //  std::cout << startItr->first.hash << " " << startItr->first.v << " starts " << startItr->second.size() << " edges" << std::endl;
+      //  ++startItr;
+      //}
+
+      //std::cout << "ending vertices " << std::endl;
+      //std::unordered_map<VertexKey, std::vector<PolygonEdgeData*> >::iterator endItr = endVertex2PolygonEdgeData.begin();
+      //while(endItr != endVertex2PolygonEdgeData.end()) {
+      //  std::cout << endItr->first.hash << " " << endItr->first.v << " ends " << endItr->second.size() << " edges" << std::endl;
+      //  ++endItr;
+      //}
 
       // keep track of vertices to add to each polygon, after we're done we'll iterate over this to actually insert them
       std::unordered_map<Polygon*, std::vector<std::pair<Vector3,Vector3> > > verticesToInsert;
@@ -298,6 +315,13 @@ namespace csgjs {
       }
 #ifdef CSGJS_DEBUG
       if(activeEdges.size() > 0) {
+        std::cout << "still have " << activeEdges.size() << " edges in active list" << std::endl;
+        std::unordered_set<PolygonEdgeData*>::iterator itr = activeEdges.begin();
+        while(itr != activeEdges.end()) {
+          std::cout << (*itr)->first << " " << (*itr)->second << std::endl;
+          ++itr;
+        }
+        std::cout << "active edges set wasn't empty" << std::endl;
         throw new std::runtime_error("active edges set wasn't empty");
       }
 #endif
@@ -362,7 +386,27 @@ namespace csgjs {
       }
 
       ++lineItr;
+      ++lineNum;
     }
+
+#ifdef CSGJS_DEBUG
+    std::unordered_map<EdgeKey, PolygonEdgeData> stillUnmatched; 
+    findUnmatchedEdges(stillUnmatched);
+
+    if(stillUnmatched.size() > 0) {
+      std::cout << "still " << stillUnmatched.size() << " unmatched edges" << std::endl;
+      std::unordered_map<EdgeKey, PolygonEdgeData>::iterator itr = stillUnmatched.begin(); 
+      while(itr != stillUnmatched.end()) {
+        LineKey lineKey(Line::fromPoints(itr->first.first, itr->first.second));
+        std::cout << itr->first.hash << " " << itr->second.first << " " << itr->second.second << " " << lineKey.hash << " " << lineKey.line << std::endl;
+        
+        ++itr;
+      }
+
+      std::cout << "still " << stillUnmatched.size() << " unmatched edges" << std::endl;
+      throw new std::runtime_error("still unmatched edges");
+    }
+#endif
   }
 
   std::ostream& operator<<(std::ostream& os, const CSG &csg) {
