@@ -35,17 +35,18 @@ namespace csgjs {
       }
     }
 
-    long int x = (int)(std::round(line.direction.x/(EPS)));
-    long int y = (int)(std::round(line.direction.y/(EPS)));
-    long int z = (int)(std::round(line.direction.z/(EPS)));
+    long int x = (long int)(std::round(line.direction.x/(10*EPS)));
+    long int y = (long int)(std::round(line.direction.y/(10*EPS)));
+    long int z = (long int)(std::round(line.direction.z/(10*EPS)));
 
-    long int x2 = (int)(std::round(line.point.x/(EPS)));
-    long int y2 = (int)(std::round(line.point.y/(EPS)));
-    long int z2 = (int)(std::round(line.point.z/(EPS)));
+    long int x2 = (long int)(std::round(line.point.x/(10*EPS)));
+    long int y2 = (long int)(std::round(line.point.y/(10*EPS)));
+    long int z2 = (long int)(std::round(line.point.z/(10*EPS)));
 
-    hash = (((std::hash<long int>()(x) ^ (std::hash<long int>()(y) << 1)) >> 1) ^ (std::hash<long int>()(z) << 1)) ^
-           (((std::hash<long int>()(x2) ^ (std::hash<long int>()(y2) << 1)) >> 1) ^ (std::hash<long int>()(z2) << 1));
-
+//    hash = (((std::hash<long int>()(x) ^ (std::hash<long int>()(y) << 1)) >> 1) ^ (std::hash<long int>()(z) << 1)) ^
+//           (((std::hash<long int>()(x2) ^ (std::hash<long int>()(y2) << 1)) >> 1) ^ (std::hash<long int>()(z2) << 1));
+    hash = (std::hash<long int>()(x) ^ std::hash<long int>()(y) ^ std::hash<long int>()(z)) ^
+           (std::hash<long int>()(x2) ^ std::hash<long int>()(y2) ^ std::hash<long int>()(z2));
   }
 
   bool LineKey::operator==(const LineKey &l) const {
@@ -56,16 +57,18 @@ namespace csgjs {
     first = a;
     second = b;
 
-    long int x = (int)(std::round(first.x/(EPS)));
-    long int y = (int)(std::round(first.y/(EPS)));
-    long int z = (int)(std::round(first.z/(EPS)));
+    long int x = (long int)(std::round(first.x/(10*EPS)));
+    long int y = (long int)(std::round(first.y/(10*EPS)));
+    long int z = (long int)(std::round(first.z/(10*EPS)));
 
-    long int x2 = (int)(std::round(second.x/(EPS)));
-    long int y2 = (int)(std::round(second.y/(EPS)));
-    long int z2 = (int)(std::round(second.z/(EPS)));
+    long int x2 = (long int)(std::round(second.x/(10*EPS)));
+    long int y2 = (long int)(std::round(second.y/(10*EPS)));
+    long int z2 = (long int)(std::round(second.z/(10*EPS)));
 
-    hash = (((std::hash<long int>()(x) ^ (std::hash<long int>()(y) << 1)) >> 1) ^ (std::hash<long int>()(z) << 1)) ^
-           (((std::hash<long int>()(x2) ^ (std::hash<long int>()(y2) << 1)) >> 1) ^ (std::hash<long int>()(z2) << 1));
+//    hash = (((std::hash<long int>()(x) ^ (std::hash<long int>()(y) << 1)) >> 1) ^ (std::hash<long int>()(z) << 1)) ^
+//           (((std::hash<long int>()(x2) ^ (std::hash<long int>()(y2) << 1)) >> 1) ^ (std::hash<long int>()(z2) << 1));
+    hash = (std::hash<long int>()(x) ^ std::hash<long int>()(y) ^ std::hash<long int>()(z)) ^
+           (std::hash<long int>()(x2) ^ std::hash<long int>()(y2) ^ std::hash<long int>()(z2));
   }
 
   EdgeKey EdgeKey::reversed() const {
@@ -77,11 +80,12 @@ namespace csgjs {
   }
 
   VertexKey::VertexKey(const Vector3 &a) : v(a) {
-    long int x = (int)(std::round(v.x/(EPS)));
-    long int y = (int)(std::round(v.y/(EPS)));
-    long int z = (int)(std::round(v.z/(EPS)));
+    long int x = (long int)(std::round(v.x/(10*EPS)));
+    long int y = (long int)(std::round(v.y/(10*EPS)));
+    long int z = (long int)(std::round(v.z/(10*EPS)));
     
-    hash = (((std::hash<long int>()(x) ^ (std::hash<long int>()(y) << 1)) >> 1) ^ (std::hash<long int>()(z) << 1));
+//    hash = (((std::hash<long int>()(x) ^ (std::hash<long int>()(y) << 1)) >> 1) ^ (std::hash<long int>()(z) << 1));
+    hash = (std::hash<long int>()(x) ^ std::hash<long int>()(y) ^ std::hash<long int>()(z));
   }
 
   bool VertexKey::operator==(const VertexKey &a) const {

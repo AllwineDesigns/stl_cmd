@@ -257,26 +257,28 @@ namespace csgjs {
         ++edgeDataItr;
       }
 
-      //std::cout << "here" << std::endl;
-      //std::set<VertexKeyDist>::iterator testItr = vertices.begin();
-      //while(testItr != vertices.end()) {
-      //  std::cout << testItr->key.hash << " " << testItr->key.v << " " << testItr->dist << std::endl;
-      //  ++testItr;
-      //}
+#ifdef CSGJS_DEBUG
+      std::cout << "all vertices" << std::endl;
+      std::set<VertexKeyDist>::iterator testItr = vertices.begin();
+      while(testItr != vertices.end()) {
+        std::cout << testItr->key.hash << " " << testItr->key.v << " " << testItr->dist << std::endl;
+        ++testItr;
+      }
 
-      //std::cout << "starting vertices " << std::endl;
-      //std::unordered_map<VertexKey, std::vector<PolygonEdgeData*> >::iterator startItr = startVertex2PolygonEdgeData.begin();
-      //while(startItr != startVertex2PolygonEdgeData.end()) {
-      //  std::cout << startItr->first.hash << " " << startItr->first.v << " starts " << startItr->second.size() << " edges" << std::endl;
-      //  ++startItr;
-      //}
+      std::cout << "starting vertices " << std::endl;
+      std::unordered_map<VertexKey, std::vector<PolygonEdgeData*> >::iterator startItr = startVertex2PolygonEdgeData.begin();
+      while(startItr != startVertex2PolygonEdgeData.end()) {
+        std::cout << startItr->first.hash << " " << startItr->first.v << " starts " << startItr->second.size() << " edges" << std::endl;
+        ++startItr;
+      }
 
-      //std::cout << "ending vertices " << std::endl;
-      //std::unordered_map<VertexKey, std::vector<PolygonEdgeData*> >::iterator endItr = endVertex2PolygonEdgeData.begin();
-      //while(endItr != endVertex2PolygonEdgeData.end()) {
-      //  std::cout << endItr->first.hash << " " << endItr->first.v << " ends " << endItr->second.size() << " edges" << std::endl;
-      //  ++endItr;
-      //}
+      std::cout << "ending vertices " << std::endl;
+      std::unordered_map<VertexKey, std::vector<PolygonEdgeData*> >::iterator endItr = endVertex2PolygonEdgeData.begin();
+      while(endItr != endVertex2PolygonEdgeData.end()) {
+        std::cout << endItr->first.hash << " " << endItr->first.v << " ends " << endItr->second.size() << " edges" << std::endl;
+        ++endItr;
+      }
+#endif
 
       // keep track of vertices to add to each polygon, after we're done we'll iterate over this to actually insert them
       std::unordered_map<Polygon*, std::vector<std::pair<Vector3,Vector3> > > verticesToInsert;
