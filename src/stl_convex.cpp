@@ -54,7 +54,7 @@ struct VertexKey {
 
 namespace std {
   template <>
-  struct std::hash<VertexKey> {
+  struct hash<VertexKey> {
     std::size_t operator()(const VertexKey& k) const {
       return ((std::hash<int>()(k.x) ^ (std::hash<int>()(k.y) << 1)) >> 1) ^ (hash<int>()(k.z) << 1);
     }
@@ -101,7 +101,7 @@ struct EdgeKey {
 
 namespace std {
   template<>
-  struct std::hash<EdgeKey> {
+  struct hash<EdgeKey> {
     std::size_t operator()(const EdgeKey& k) const {
       return ((std::hash<VertexKey>()(k.v1) ^ (std::hash<VertexKey>()(k.v2) << 1)) >> 1);
     }

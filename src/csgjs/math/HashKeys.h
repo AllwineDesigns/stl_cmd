@@ -43,24 +43,26 @@ namespace csgjs {
   };
 }
 
-template <>
-struct std::hash<csgjs::LineKey> {
-  std::size_t operator()(const csgjs::LineKey& l) const;
-}; 
+namespace std {
+  template <>
+  struct hash<csgjs::LineKey> {
+    std::size_t operator()(const csgjs::LineKey& l) const;
+  }; 
 
-template <>
-struct std::hash<csgjs::EdgeKey> {
-  std::size_t operator()(const csgjs::EdgeKey& e) const;
-}; 
+  template <>
+  struct hash<csgjs::EdgeKey> {
+    std::size_t operator()(const csgjs::EdgeKey& e) const;
+  }; 
 
-template <>
-struct std::hash<csgjs::VertexKey> {
-  std::size_t operator()(const csgjs::VertexKey& e) const;
-}; 
+  template <>
+  struct hash<csgjs::VertexKey> {
+    std::size_t operator()(const csgjs::VertexKey& e) const;
+  }; 
 
-template <>
-struct std::hash<csgjs::VertexKeyDist> {
-  std::size_t operator()(const csgjs::VertexKeyDist& e) const;
-}; 
+  template <>
+  struct hash<csgjs::VertexKeyDist> {
+    std::size_t operator()(const csgjs::VertexKeyDist& e) const;
+  }; 
+}
 
 #endif
