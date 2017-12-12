@@ -26,7 +26,7 @@ namespace csgjs {
     fseek(f, 80, SEEK_SET);
 
     uint32_t num_tris;
-    fread(&num_tris, 4, 1, f);
+    size_t readBytes = fread(&num_tris, 4, 1, f);
 
     vec p1;
     vec p2;
@@ -35,9 +35,9 @@ namespace csgjs {
     for(int i = 0; i < num_tris; i++) {
         fseek(f, 12, SEEK_CUR); // normal
 
-        fread(&p1, 1, 12,f);
-        fread(&p2, 1, 12,f);
-        fread(&p3, 1, 12,f);
+        readBytes = fread(&p1, 1, 12,f);
+        readBytes = fread(&p2, 1, 12,f);
+        readBytes = fread(&p3, 1, 12,f);
         fseek(f, 2, SEEK_CUR);
 
         verts.clear();

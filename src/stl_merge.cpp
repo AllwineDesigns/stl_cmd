@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
         fseek(f, 80, SEEK_SET);
 
         uint32_t nt;
-        fread(&nt, 4, 1, f);
+        size_t readBytes = fread(&nt, 4, 1, f);
 
         num_tris += nt;
         fclose(f);

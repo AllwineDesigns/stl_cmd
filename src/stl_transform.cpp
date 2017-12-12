@@ -237,7 +237,7 @@ int main(int argc, char** argv) {
 
     uint32_t num_tris;
 
-    fread(&num_tris, 4, 1, f);
+    size_t readBytes = fread(&num_tris, 4, 1, f);
 
     char header[81] = {0}; // include an extra char for terminating \0 of snprintf
     snprintf(header, 81, "Transformed copy of %s", basename(file));
@@ -255,7 +255,7 @@ int main(int argc, char** argv) {
     point.w = 1;
 
     for(int i = 0; i < num_tris; i++) {
-        fread(&normal, 1, 12,f);
+        readBytes = fread(&normal, 1, 12,f);
 
         vec_mat_mult(&normal, &inv_transpose, &tmp_vec);
         if(did_scale) {
@@ -266,11 +266,11 @@ int main(int argc, char** argv) {
         }
 
         for(int j = 0; j < 3; j++) {
-            fread(&point, 1, 12,f);
+            readBytes = fread(&point, 1, 12,f);
             vec_mat_mult(&point, &combined, &tmp_vec);
             fwrite(&tmp_vec, 1, 12, outf);
         }
-        fread(&abc, 1, 2,f);
+        readBytes = fread(&abc, 1, 2,f);
         fwrite(&abc, 1, 2,outf);
     }
 

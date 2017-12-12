@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     fseek(f, 80, SEEK_SET);
 
     uint32_t num_tris;
-    fread(&num_tris, 4, 1, f);
+    size_t readBytes = fread(&num_tris, 4, 1, f);
 
     vec point;
     point.w = 1;
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
         fseek(f, 12, SEEK_CUR); // normal
 
         for(int j = 0; j < 3; j++) {
-            fread(&point, 1, 12,f);
+            readBytes = fread(&point, 1, 12,f);
             if(i == 0 && j == 0) {
                 min.x = point.x;
                 min.y = point.y;

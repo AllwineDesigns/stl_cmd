@@ -116,12 +116,12 @@ int main(int argc, char** argv) {
     fseek(inf, 0, SEEK_SET);
 
     char header[80] = {0};
-    fread(header, 1, 80, inf);
+    size_t readBytes = fread(header, 1, 80, inf);
 
     uint16_t zero = 0;
     uint16_t abc;
     uint32_t num_tris;
-    fread(&num_tris, 4, 1, inf);
+    readBytes = fread(&num_tris, 4, 1, inf);
 
     if(needs_out) {
         fwrite(header, 1, 80, outf);
@@ -147,11 +147,11 @@ int main(int argc, char** argv) {
         fprintf(stderr, "reading %d triangles and normals\n", num_tris);
     }
     for(int i = 0; i < num_tris; i++) {
-        fread(&n, 1, 12, inf);
-        fread(&p1, 1, 12, inf);
-        fread(&p2, 1, 12, inf);
-        fread(&p3, 1, 12, inf);
-        fread(&abc, 1, 2, inf);
+        readBytes = fread(&n, 1, 12, inf);
+        readBytes = fread(&p1, 1, 12, inf);
+        readBytes = fread(&p2, 1, 12, inf);
+        readBytes = fread(&p3, 1, 12, inf);
+        readBytes = fread(&abc, 1, 2, inf);
 
         vec_sub(&p2, &p1, &d1);
         vec_sub(&p3, &p1, &d2);

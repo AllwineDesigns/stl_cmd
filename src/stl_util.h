@@ -44,7 +44,7 @@ int is_valid_binary_stl(char* filename) {
             fseek(f, 80, SEEK_SET);
 
             uint32_t num_tris;
-            fread(&num_tris, 4, 1, f);
+            size_t readBytes = fread(&num_tris, 4, 1, f);
             uint64_t calced_size = 84+(4*12+2)*num_tris;
             if(size != calced_size) {
 //                fprintf(stderr, "    actual size: %10lld\n", size);

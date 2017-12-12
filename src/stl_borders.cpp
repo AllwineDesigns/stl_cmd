@@ -150,7 +150,7 @@ int main(int argc, char** argv) {
     uint32_t num_tris;
     uint16_t abc = 0; // attribute byte count 
 
-    fread(&num_tris, 4, 1, f);
+    size_t readBytes = fread(&num_tris, 4, 1, f);
 
     std::unordered_map<EdgeKey, int> edgeCounts;
 
@@ -160,11 +160,11 @@ int main(int argc, char** argv) {
       vec p1;
       vec p2;
 
-      fread(&normal, 1, 12,f);
-      fread(&p0, 1, 12,f);
-      fread(&p1, 1, 12,f);
-      fread(&p2, 1, 12,f);
-      fread(&abc, 1, 2,f);
+      readBytes = fread(&normal, 1, 12,f);
+      readBytes = fread(&p0, 1, 12,f);
+      readBytes = fread(&p1, 1, 12,f);
+      readBytes = fread(&p2, 1, 12,f);
+      readBytes = fread(&abc, 1, 2,f);
 
       VertexKey v0(p0.x, p0.y, p0.z);
       VertexKey v1(p1.x, p1.y, p1.z);

@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
         fwrite(header, 80, 1, f);
         fclose(f);
     } else {
-        fread(header, 80, 1, f);
+        size_t readBytes = fread(header, 80, 1, f);
         fclose(f);
 
         for(int i = 0; i < 80; i++) {

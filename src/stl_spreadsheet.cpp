@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
     fseek(f, 80, SEEK_SET);
 
     uint32_t num_tris;
-    fread(&num_tris, 4, 1, f);
+    size_t readBytes = fread(&num_tris, 4, 1, f);
 
     vec normal;
     vec point;
@@ -64,12 +64,12 @@ int main(int argc, char** argv) {
     std::cout << "normal.x\tnormal.y\tnormal.z\tpoint1.x\tpoint1.y\tpoint1.z\tpoint2.x\tpoint2.y\tpoint2.z\tpoint3.x\tpoint3.y\tpoint3.z" << std::endl;
 
     for(int i = 0; i < num_tris; i++) {
-      fread(&normal, 1, 12,f);
+      readBytes = fread(&normal, 1, 12,f);
 
       std::cout << normal.x << "\t" << normal.y << "\t" << normal.z;
 
       for(int j = 0; j < 3; j++) {
-        fread(&point, 1, 12,f);
+        readBytes = fread(&point, 1, 12,f);
         std::cout << "\t" << point.x << "\t" << point.y << "\t" << point.z;
       }
       std::cout << std::endl;
