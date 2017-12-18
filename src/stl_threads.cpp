@@ -329,6 +329,12 @@ int write_sliced_tri(FILE *f,
 }
 
 int main(int argc, char** argv) {
+    if(argc >= 2) {
+        if(strcmp(argv[1], "--help") == 0) {
+            print_usage();
+            exit(2);
+        }
+    }
     int c;
     int errflg = 0;
 
