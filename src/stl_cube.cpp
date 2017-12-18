@@ -29,7 +29,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
-    fprintf(stderr, "stl_cube ouputs an STL file of a single cube.\n\n");
+    fprintf(stderr, "stl_cube outputs an STL file of a single cube.\n\n");
     fprintf(stderr, "usage: stl_cube [-w <width>] [ <output file> ]\n");
     fprintf(stderr, "    Outputs an stl file of a cube with the provided width. ");
     fprintf(stderr, "    If the width is omitted, it defaults to 1. If no output file is provided, data is sent to stdout. \n");
