@@ -1,0 +1,18 @@
+* v1.0 release with the following commands
+    * stl_empty
+    * stl_cube
+    * stl_sphere
+    * stl_cylinder
+    * stl_cone
+    * stl_torus
+    * stl_threads
+    * stl_header
+    * stl_count
+    * stl_normals
+    * stl_bbox
+    * stl_convex
+    * stl_borders
+    * stl_spreadsheet
+    * stl_merge
+    * stl_transform
+    * stl_boolean
