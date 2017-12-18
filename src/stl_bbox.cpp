@@ -29,6 +29,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
+    fprintf(stderr, "stl_bbox prints bounding box information about an STL file.\n\n");
     fprintf(stderr, "usage: stl_bbox <input file>\n");
     fprintf(stderr, "    Prints bounding box information for the given binary STL file.\n");
 }

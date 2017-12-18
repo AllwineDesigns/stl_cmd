@@ -31,7 +31,7 @@ $(DOCS_DIR):
 
 docs: $(DOCS_DIR) $(CMDS)
 	for cmd in $(CMDS); do \
-	  help2man $$cmd --no-discard-stderr --version-string="v$(VERSION)" --no-info > $(DOCS_DIR)/$$(basename $$cmd).1; \
+	  help2man $$cmd --name="$$($$cmd --help 2>&1 | head --lines=1)" --no-discard-stderr --version-string="v$(VERSION)" --no-info > $(DOCS_DIR)/$$(basename $$cmd).1; \
 	done
 
 installDocs: docs

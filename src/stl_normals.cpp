@@ -28,6 +28,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
+    fprintf(stderr, "stl_normals inspects and modifies normal data of an STL file.\n\n");
     fprintf(stderr, "usage: stl_normals [ -c ] [ -r ] [ -v ] <in file> [ <out file> ]\n");
     fprintf(stderr, "    Checks the stored normals against calculated normals based on ordering of vertices.\n"
                     "     -c - if present will ignore the present normal values and calculate them based on the vertex ordering.\n"

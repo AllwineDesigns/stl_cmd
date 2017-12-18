@@ -31,6 +31,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 // rather than just merging.
 
 void print_usage() {
+    fprintf(stderr, "stl_merge concatenates multiple STL files.\n\n");
     fprintf(stderr, "usage: stl_merge [ -o <out file> ] [ <in file1> ... ]\n");
     fprintf(stderr, "    Merges binary stl files into a single file. If no out file is provided, data is output to stdout.\n");
 }

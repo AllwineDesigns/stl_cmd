@@ -29,8 +29,9 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
+    fprintf(stderr, "stl_empty outputs an empty STL file.\n\n");
     fprintf(stderr, "usage: stl_empty <output file>\n");
-    fprintf(stderr, "    Outputs an empty stl file. ");
+    fprintf(stderr, "    Outputs a properly formatted, but empty stl file (just an 80 byte header and a 0 indicating no triangles). ");
 }
 
 int main(int argc, char** argv) {

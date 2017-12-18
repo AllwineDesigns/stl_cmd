@@ -27,6 +27,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
+    fprintf(stderr, "stl_header inspects and modifies the header section of an STL file.\n\n");
     fprintf(stderr, "usage: stl_header [-s <header>] [-o <output file>] <input file>\n");
     fprintf(stderr, "    If both -s and -o flags are specified <input file> is copied to <output\n");
     fprintf(stderr, "    file> and its header is set to <header>. If -o is not specified and -s is\n");

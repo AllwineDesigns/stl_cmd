@@ -28,6 +28,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
+    fprintf(stderr, "stl_count prints the number of triangles in an STL file.\n\n");
     fprintf(stderr, "usage: stl_count [ <input file> ]\n");
     fprintf(stderr, "    Prints the number of triangles in the provided binary STL file. If no input file is specified, data is read from stdin.\n");
 }

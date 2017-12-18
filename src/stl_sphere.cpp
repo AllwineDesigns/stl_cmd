@@ -27,6 +27,7 @@ Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include "stl_util.h"
 
 void print_usage() {
+    fprintf(stderr, "stl_sphere outputs an STL file of a single sphere.\n\n");
     fprintf(stderr, "usage: stl_sphere [-r <radius>] [-s <longitudinal segments>] [-t <latitudinal segments>] [ <output file> ]\n");
     fprintf(stderr, "    Outputs an stl file of a sphere with the provided radius and number of segments. ");
     fprintf(stderr, "    If the radius is omitted, it defaults to 1. If longitudinal segments is omitted, it defaults to 32. If latitudinal segments is omitted, it defaults to half the longitudinal segments. If no output file is provided, data is sent to stdout. \n");

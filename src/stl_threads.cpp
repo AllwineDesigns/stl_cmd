@@ -33,6 +33,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 // won't work with stdout.
 
 void print_usage() {
+    fprintf(stderr, "stl_threads outputs an STL file with male or female threads per the ISO metric screw thread standard.\n\n");
     fprintf(stderr, "usage: stl_threads [ -f ] [ -D <diameter> ] [ -P <pitch> ] [ -a <angle> ]\n"
                     "                   [ -h <height> ] [ -s <segments> ] <output file>\n");
     fprintf(stderr, "    Outputs an stl file with male or female screw threads per the ISO metric \n"

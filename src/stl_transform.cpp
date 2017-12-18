@@ -36,6 +36,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 // stl_merge *.stl |  transform -s 10 > all_cubes_scaled.stl
 
 void print_usage() {
+    fprintf(stderr, "stl_transform performs any number of transformations to an STL file.\n\n");
     fprintf(stderr, "usage: stl_transform [[ <transformation> ] ...] <input file> <output file>\n");
     fprintf(stderr, "    Performs any number of the following transformations in\n");
     fprintf(stderr, "    the order they are listed on the command line:\n");

@@ -29,6 +29,7 @@ Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
+    fprintf(stderr, "stl_torus outputs an STL file of a single torus.\n\n");
     fprintf(stderr, "usage: stl_torus [ -o <outer radius> ] [ -i <inner radius> ] [ -s <segments> ] [ -c <cross sectional segments> ] [ <output file> ]\n");
     fprintf(stderr, "    Outputs an stl file of a torus with the provided outer radius, inner radius and number of segments.\n");
     fprintf(stderr, "    If the inner radius is omitted, it defaults to .5. If the outer radius is omitted, it defaults to 1.\n");

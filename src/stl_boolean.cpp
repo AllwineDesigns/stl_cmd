@@ -28,6 +28,7 @@ Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include "csgjs/util.h"
 
 void print_usage() {
+    fprintf(stderr, "stl_boolean performs CSG operations on two STL files.\n\n");
     fprintf(stderr, "usage: stl_boolean -a <stl file A> -b <stl file B> [ -i ] [ -u ] [ -d ] <output file>\n");
     fprintf(stderr, "    Performs a mesh CSG boolean operation on STL files A and B using BSP trees.\n"
                     "     -i - performs the intersection of A and B\n"

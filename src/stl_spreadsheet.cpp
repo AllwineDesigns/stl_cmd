@@ -28,6 +28,7 @@ Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include <iostream>
 
 void print_usage() {
+    fprintf(stderr, "stl_spreadsheet outputs an STL file in a tab delimited text format.\n\n");
     fprintf(stderr, "usage: stl_spreadsheet <input file>\n");
     fprintf(stderr, "    Prints vertex and normal information for every triangle in STL file in a tab delimited format that can be opened as a spreadsheet.\n");
 }

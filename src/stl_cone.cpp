@@ -29,6 +29,7 @@ Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
+    fprintf(stderr, "stl_cone outputs an STL file of a single cone.\n\n");
     fprintf(stderr, "usage: stl_cone [ -r <radius> ] [ -t <top radius> ] [ -h <height> ] [ -s <segments> ] [ <output file> ]\n");
     fprintf(stderr, "    Outputs an stl file of a cone with the provided radius, top radius, height and number of segments to approximate a circle.\n");
     fprintf(stderr, "    If the radius or height are omitted, they default to 1. The top radius defaults to 0. If top radius is greater than 0, will output a truncated code. If segments is omitted, it defaults to 32. If no output file is provided, data is sent to stdout. \n");

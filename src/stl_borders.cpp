@@ -31,9 +31,9 @@ Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
-    fprintf(stderr, "usage: stl_convex [ -v ] [ <input file> ]\n");
-    fprintf(stderr, "    Prints whether the input file is a convex polyhedron. If no input file is specified, data is read from stdin. If -v is specified, prints out the Euler characteristic in addition to whether the mesh is convex.\n");
-    fprintf(stderr, "The Euler characteristic of a polyhedral surface is defined as V - E + F, where V is the number of vertices, E is the number of edges, and F is the number of faces. All convex polyhedra will have an Euler characteristic of 2.\n");
+    fprintf(stderr, "stl_borders prints how many border edges there are in a given STL file.\n\n");
+    fprintf(stderr, "usage: stl_borders [ <input file> ]\n");
+    fprintf(stderr, "    Prints how many border edges there are. For a watertight, manifold model, it will be 0.\n");
 }
 
 struct VertexKey {
@@ -119,13 +119,8 @@ int main(int argc, char** argv) {
     int errflg = 0;
     int c;
 
-    int verbose = 0;
-
-    while((c = getopt(argc, argv, "v")) != -1) {
+    while((c = getopt(argc, argv, "")) != -1) {
         switch(c) {
-            case 'v':
-                verbose = 1;
-                break;
             case '?':
                 fprintf(stderr, "Unrecognized option: '-%c'\n", optopt);
                 errflg++;

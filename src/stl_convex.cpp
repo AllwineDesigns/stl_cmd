@@ -31,6 +31,7 @@ Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
+    fprintf(stderr, "stl_convex prints whether an STL file is a convex polyhedron.\n\n");
     fprintf(stderr, "usage: stl_convex [ -v ] [ <input file> ]\n");
     fprintf(stderr, "    Prints whether the input file is a convex polyhedron. If no input file is specified, data is read from stdin. If -v is specified, prints out the Euler characteristic in addition to whether the mesh is convex.\n");
     fprintf(stderr, "The Euler characteristic of a polyhedral surface is defined as V - E + F, where V is the number of vertices, E is the number of edges, and F is the number of faces. All convex polyhedra will have an Euler characteristic of 2.\n");
