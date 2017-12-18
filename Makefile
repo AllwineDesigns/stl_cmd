@@ -37,7 +37,7 @@ docs: $(DOCS_DIR) $(CMDS)
 installDocs: docs
 	install -d $(target)/share/man/man1
 	for cmd in $(CMDS); do \
-	  gzip -9 $(DOCS_DIR)/$$(basename $$cmd).1 > $(target)/share/man/man1/$$(basename $$cmd).1.gz; \
+	  gzip -c -9 $(DOCS_DIR)/$$(basename $$cmd).1 > $(target)/share/man/man1/$$(basename $$cmd).1.gz; \
 	done
 
 uninstallDocs:
