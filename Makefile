@@ -5,17 +5,16 @@ BIN_DIR := bin
 CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube stl_sphere stl_cylinder stl_cone stl_torus stl_empty stl_threads stl_normals stl_convex stl_borders stl_spreadsheet)
 
 CC := g++
-#CFLAGS=-Og -g 
-CFLAGS=-O3
-CPPFLAGS=-std=c++11
+#FLAGS=-Og -g -std=c++11 $(CPPFLAGS)
+FLAGS=-O3 -std=c++11 $(CPPFLAGS)
 
 all: $(CMDS) bin/stl_boolean
 
 $(BIN_DIR)/%: src/%.cpp src/stl_util.h
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(OUTPUT_OPTION) $<
+	$(CC) $(FLAGS) $(OUTPUT_OPTION) $<
 
 $(BIN_DIR)/stl_boolean: src/stl_boolean.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp src/csgjs/math/*.h src/csgjs/*.h
-	$(CC) $(CFLAGS) $(CPPFLAGS) src/stl_boolean.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp -Isrc -o bin/stl_boolean 
+	$(CC) $(FLAGS) src/stl_boolean.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp -Isrc -o bin/stl_boolean 
 
 $(CMDS): | $(BIN_DIR)
 
