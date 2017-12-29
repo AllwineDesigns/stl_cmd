@@ -5,6 +5,9 @@ VERSION=1.0
 DOCS_DIR := man
 BIN_DIR := bin
 CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube stl_sphere stl_cylinder stl_cone stl_torus stl_empty stl_threads stl_normals stl_convex stl_borders stl_spreadsheet)
+CSGJS_CMDS := $(addprefix $(BIN_DIR)/,stl_boolean)
+
+ALL_CMDS := $(CSGJS_CMDS) $(CMDS)
 
 CC := g++
 #FLAGS=-Og -g -std=c++11
@@ -30,28 +33,28 @@ $(DOCS_DIR):
 	mkdir $(DOCS_DIR)
 
 docs: $(DOCS_DIR) $(CMDS)
-	for cmd in $(CMDS); do \
+	for cmd in $(ALL_CMDS); do \
 	  help2man $$cmd --name="$$($$cmd --help 2>&1 | head --lines=1)" --no-discard-stderr --version-string="v$(VERSION)" --no-info > $(DOCS_DIR)/$$(basename $$cmd).1; \
 	done
 
 installDocs: docs
 	install -d $(target)/share/man/man1
-	for cmd in $(CMDS); do \
+	for cmd in $(ALL_CMDS); do \
 	  gzip -c -9 $(DOCS_DIR)/$$(basename $$cmd).1 > $(target)/share/man/man1/$$(basename $$cmd).1.gz; \
 	done
 
 uninstallDocs:
-	for cmd in $(CMDS); do \
+	for cmd in $(ALL_CMDS); do \
 	  rm $(target)/share/man/man1/$$(basename $$cmd).1.gz; \
 	done
 
 install: all
 	install -d $(target)/bin
-	for cmd in $(CMDS); do \
+	for cmd in $(ALL_CMDS); do \
 	  install $$cmd $(target)/$$cmd; \
 	done
 
 uninstall: 
-	for cmd in $(CMDS); do \
+	for cmd in $(ALL_CMDS); do \
 	  rm $(target)/$$cmd; \
 	done
