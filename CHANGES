@@ -1,3 +1,4 @@
+* v1.1 Fixed Makefile to properly install stl_boolean
 * v1.0 release with the following commands
     * stl_empty
     * stl_cube
