@@ -26,6 +26,8 @@ Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include <cmath>
 #include "stl_util.h"
 #include <unordered_set>
+#include <unordered_map>
+#include <vector>
 #include <iostream>
 
 #define BUFFER_SIZE 4096
@@ -37,15 +39,16 @@ void print_usage() {
     fprintf(stderr, "The Euler characteristic of a polyhedral surface is defined as V - E + F, where V is the number of vertices, E is the number of edges, and F is the number of faces. All convex polyhedra will have an Euler characteristic of 2.\n");
 }
 
+#define EPS .000001
 struct VertexKey {
   int x;
   int y;
   int z;
   VertexKey() : x(0), y(0), z(0) {}
   VertexKey(float xx, float yy, float zz) {
-    x = (int)(std::round((double)xx/EPSILON));
-    y = (int)(std::round((double)yy/EPSILON));
-    z = (int)(std::round((double)zz/EPSILON));
+    x = (int)(std::round((double)xx/EPS));
+    y = (int)(std::round((double)yy/EPS));
+    z = (int)(std::round((double)zz/EPS));
   }
 
   bool operator==(const VertexKey& k) const {
@@ -159,7 +162,8 @@ int main(int argc, char** argv) {
 
     size_t readBytes = fread(&num_tris, 4, 1, f);
 
-    std::unordered_set<VertexKey> vertsSeen;
+    std::unordered_map<VertexKey,std::vector<vec>> verts2normals;
+    std::unordered_map<VertexKey,std::vector<vec>> verts2edges;
     std::unordered_set<EdgeKey> edgesSeen;
 
     for(int i = 0; i < num_tris; i++) {
@@ -178,16 +182,54 @@ int main(int argc, char** argv) {
       VertexKey v1(p1.x, p1.y, p1.z);
       VertexKey v2(p2.x, p2.y, p2.z);
 
-      vertsSeen.insert(v0);
-      vertsSeen.insert(v1);
-      vertsSeen.insert(v2);
+      verts2normals[v0].push_back(normal);
+      verts2normals[v1].push_back(normal);
+      verts2normals[v2].push_back(normal);
+
+      vec e;
+
+      e.x = p1.x-p0.x;
+      e.y = p1.y-p0.y;
+      e.z = p1.z-p0.z;
+
+      verts2edges[v0].push_back(e);
+
+      e.x = p2.x-p0.x;
+      e.y = p2.y-p0.y;
+      e.z = p2.z-p0.z;
+
+      verts2edges[v0].push_back(e);
+
+      e.x = p0.x-p1.x;
+      e.y = p0.y-p1.y;
+      e.z = p0.z-p1.z;
+
+      verts2edges[v1].push_back(e);
+
+      e.x = p2.x-p1.x;
+      e.y = p2.y-p1.y;
+      e.z = p2.z-p1.z;
+
+      verts2edges[v1].push_back(e);
+
+      e.x = p0.x-p2.x;
+      e.y = p0.y-p2.y;
+      e.z = p0.z-p2.z;
+
+      verts2edges[v2].push_back(e);
+
+      e.x = p1.x-p2.x;
+      e.y = p1.y-p2.y;
+      e.z = p1.z-p2.z;
+
+      verts2edges[v2].push_back(e);
 
       edgesSeen.insert(EdgeKey(v0, v1));
       edgesSeen.insert(EdgeKey(v1, v2));
       edgesSeen.insert(EdgeKey(v2, v0));
     }
 
-    int V = vertsSeen.size();
+    int V = verts2normals.size();
     int E = edgesSeen.size();
     int F = num_tris;
 
@@ -201,8 +243,36 @@ int main(int argc, char** argv) {
     }
 
     if(euler_characteristic == 2) {
+      if(verbose) {
+        std::cout << "Euler characteristic of 2... possibly convex" << std::endl;
+      }
+
+      std::unordered_map<VertexKey, std::vector<vec>>::iterator itr = verts2edges.begin();
+      while(itr != verts2edges.end()) {
+        std::vector<vec>::iterator nItr = verts2normals[itr->first].begin();
+        while(nItr != verts2normals[itr->first].end()) {
+          std::vector<vec>::iterator vItr = itr->second.begin();
+          while(vItr != itr->second.end()) {
+            if(vec_dot(&(*vItr), &(*nItr)) > EPSILON) {
+              if(verbose) {
+                std::cout << "found vertex with non convex edge" << std::endl;
+              }
+              std::cout << "not convex" << std:: endl;
+              exit(0);
+            }
+            ++vItr;
+          }
+          ++nItr;
+        }
+        ++itr;
+
+      }
+
       std::cout << "convex" << std:: endl;
     } else {
+      if(verbose) {
+        std::cout << "Euler characteristic of " << euler_characteristic << "..." << std::endl;
+      }
       std::cout << "not convex" << std:: endl;
     }
 
