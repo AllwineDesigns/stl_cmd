@@ -17,6 +17,11 @@ Getting started
 
 The stl_cmds will be compiled and placed in the bin/ directory in the root of the stl_cmd repo. Add it to your path and you can perform the following commands.
 
+stl_cmd releases are now a part of Debian! You can install them using apt-get.
+
+    # on Debian unstable or Ubuntu bionic
+    sudo apt-get install stlcmd
+
 Examples
 --------
 
