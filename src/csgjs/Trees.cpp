@@ -1,4 +1,5 @@
 #include "csgjs/Trees.h"
+#include <list>
 
 namespace csgjs {
   Node::Node() : parent(NULL), front(NULL), back(NULL)  {
@@ -36,7 +37,6 @@ namespace csgjs {
 
     std::vector<PolygonTreeNode*>::const_iterator itr = polyTreeNodes.begin();
     while(itr != polyTreeNodes.end()) {
-      // why is backNodes set to both coplanarBacknodes and backnodes?
       (*itr)->splitByPlane(plane, polygonTreeNodes, backNodes, frontNodes, backNodes);
       ++itr;
     }
@@ -71,6 +71,34 @@ namespace csgjs {
     }
   }
 
+  // Returns true if any triangles exist on the front side of the triangle
+  //
+  // breadth first search for provided plane, then check if any front nodes exist
+  bool Node::hasFrontNodes(const Plane &p) const {
+    std::list<const Node*> queue;
+
+    queue.push_back(this);
+
+    while(!queue.empty()) {
+      const Node* curNode = queue.front();
+      queue.pop_front();
+
+      if(curNode->plane.isEqualWithinTolerance(p)) {
+        if(curNode->front != NULL) {
+          return true;
+        }
+      } else {
+        if(curNode->front != NULL) {
+          queue.push_back(curNode->front);
+        }
+        if(curNode->back != NULL) {
+          queue.push_back(curNode->back);
+        }
+      }
+    }
+    return false;
+  }
+
   void Node::clipPolygons(std::vector<PolygonTreeNode*> &polyTreeNodes, bool alsoRemoveCoplanarFront) {
     std::vector<PolygonTreeNode*> frontNodes;
     std::vector<PolygonTreeNode*> backNodes;
@@ -103,6 +131,10 @@ namespace csgjs {
 
   Tree::Tree(const std::vector<Polygon> &polygons) {
     addPolygons(polygons);
+  }
+
+  bool Tree::hasPolygonsInFront(const Plane &p) const {
+    return rootnode.hasFrontNodes(p);
   }
 
   void Tree::addPolygons(const std::vector<Polygon> &polygons) {

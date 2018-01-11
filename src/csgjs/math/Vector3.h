@@ -35,6 +35,7 @@ struct Vector3 {
   Vector3 nonParallelVector() const;
   Vector3 min(const Vector3 &v) const;
   Vector3 max(const Vector3 &v) const;
+  bool isZero() const;
 };
 
 Vector3 operator*(const csgjs_real m, const Vector3 &v);

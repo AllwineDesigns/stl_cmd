@@ -2,8 +2,17 @@
 #define __CSGJS_HASHKEYS__
 
 #include "csgjs/math/Line3.h"
+#include "csgjs/math/Plane.h"
 
 namespace csgjs {
+  struct PlaneKey {
+    std::size_t hash;
+    Plane plane;
+
+    PlaneKey(const Plane &p);
+    bool operator==(const PlaneKey &k) const;
+  };
+
   struct LineKey {
     std::size_t hash;
     Line line;
@@ -44,6 +53,11 @@ namespace csgjs {
 }
 
 namespace std {
+  template <>
+  struct hash<csgjs::PlaneKey> {
+    std::size_t operator()(const csgjs::PlaneKey& l) const;
+  }; 
+
   template <>
   struct hash<csgjs::LineKey> {
     std::size_t operator()(const csgjs::LineKey& l) const;

@@ -41,6 +41,10 @@ namespace csgjs {
     return sqrt(this->lengthSquared());
   }
 
+  bool Vector3::isZero() const {
+    return x < EPS && x > NEG_EPS && y < EPS && y > NEG_EPS && z < EPS && z > NEG_EPS;
+  }
+
   Vector3 Vector3::unit() const {
     return (*this)/this->length();
   }

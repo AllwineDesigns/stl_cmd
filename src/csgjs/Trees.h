@@ -68,6 +68,7 @@ namespace csgjs {
       Node();
       Node(Node* p);
 
+      bool hasFrontNodes(const Plane &p) const;
       bool isRootNode() const;
       void invert();
       void clipTo(Tree &tree, bool alsoRemoveCoplanarFront=false);
@@ -86,6 +87,7 @@ namespace csgjs {
 
       void addPolygons(const std::vector<Polygon> &polygons);
 
+      bool hasPolygonsInFront(const Plane &p) const;
       void clipTo(Tree &tree, bool alsoRemoveCoplanarFront=false);
       void invert();
       std::vector<Polygon> toPolygons();

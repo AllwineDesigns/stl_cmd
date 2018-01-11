@@ -35,6 +35,7 @@ struct Matrix4x4 {
   Matrix4x4 operator-(const Matrix4x4 &mat) const;
   Matrix4x4 operator*(const Matrix4x4 &mat) const;
   static Matrix4x4 translate(csgjs_real x, csgjs_real y, csgjs_real z);
+  static Matrix4x4 rotate(const Vector3 &axis, csgjs_real angle);
 };
 
 }

@@ -63,6 +63,11 @@ struct Plane {
     return normal == p.normal && w == p.w;
   }
 
+  bool isEqualWithinTolerance(const Plane &p) const {
+    csgjs_real wDiff = p.w-w;
+    return (p.normal-normal).isZero() && wDiff < EPS && wDiff > NEG_EPS;
+  }
+
   static Plane fromVector3s(const Vector3 &a, const Vector3 &b, const Vector3 &c) {
     Vector3 n = ((b-a).cross(c-a)).unit();
     return Plane(n, n.dot(a));

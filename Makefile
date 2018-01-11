@@ -5,7 +5,7 @@ VERSION=1.1
 DOCS_DIR := man
 BIN_DIR := bin
 CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube stl_sphere stl_cylinder stl_cone stl_torus stl_empty stl_threads stl_normals stl_convex stl_borders stl_spreadsheet stl_area)
-CSGJS_CMDS := $(addprefix $(BIN_DIR)/,stl_boolean)
+CSGJS_CMDS := $(addprefix $(BIN_DIR)/,stl_boolean stl_flat)
 
 ALL_CMDS := $(CSGJS_CMDS) $(CMDS)
 
@@ -13,13 +13,13 @@ CC := g++
 #FLAGS=-Og -g -std=c++11
 FLAGS=-O3 -std=c++11
 
-all: $(CMDS) bin/stl_boolean
+all: $(CMDS) $(CSGJS_CMDS)
 
-$(BIN_DIR)/%: src/%.cpp src/stl_util.h
+$(CMDS): $(BIN_DIR)/%: src/%.cpp src/stl_util.h
 	$(CC) $(FLAGS) $(CPPFLAGS) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) $(OUTPUT_OPTION) $<
 
-$(BIN_DIR)/stl_boolean: src/stl_boolean.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp src/csgjs/math/*.h src/csgjs/*.h
-	$(CC) $(FLAGS) $(CPPFLAGS) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) src/stl_boolean.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp -Isrc -o bin/stl_boolean 
+$(CSGJS_CMDS): $(BIN_DIR)/%: src/%.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp src/csgjs/math/*.h src/csgjs/*.h
+	$(CC) $(FLAGS) $(CPPFLAGS) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) src/csgjs/*.cpp src/csgjs/math/*.cpp -Isrc $(OUTPUT_OPTION) $< 
 
 $(CMDS): | $(BIN_DIR)
 

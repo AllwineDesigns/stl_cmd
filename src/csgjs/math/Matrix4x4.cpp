@@ -158,4 +158,33 @@ namespace csgjs {
                      x,y,z,1);
   }
 
+  Matrix4x4 Matrix4x4::rotate(const Vector3 &axis, csgjs_real angle) {
+    csgjs_real cos_angle = cos(angle);
+    csgjs_real one_minus_cos_angle = 1-cos_angle;
+    csgjs_real sin_angle = sin(angle);
+
+    return Matrix4x4(
+    // x
+      cos_angle+axis.x*axis.x*one_minus_cos_angle, 
+      axis.y*axis.x*one_minus_cos_angle+axis.z*sin_angle,
+      axis.z*axis.x*one_minus_cos_angle-axis.y*sin_angle,
+      0,
+
+    // y
+      axis.x*axis.y*one_minus_cos_angle-axis.z*sin_angle,
+      cos_angle+axis.y*axis.y*one_minus_cos_angle,
+      axis.z*axis.y*one_minus_cos_angle+axis.x*sin_angle,
+      0,
+
+    // z
+      axis.x*axis.z*one_minus_cos_angle+axis.y*sin_angle,
+      axis.y*axis.z*one_minus_cos_angle-axis.x*sin_angle,
+      cos_angle+axis.z*axis.z*one_minus_cos_angle,
+      0,
+
+    // t
+      0, 0, 0, 1
+    );
+  }
+
 }
