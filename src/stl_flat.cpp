@@ -103,6 +103,7 @@ int main(int argc, char** argv) {
     std::vector<PlaneKey>::iterator pItr = planes.begin();
     while(pItr != planes.end()) {
       if(!tree.hasPolygonsInFront(pItr->plane)) {
+        std::cout << "Orienting to plane with total surface area of " << areaSorter.area[*pItr] << std::endl;
         csgjs_real dotWithNegativeZ = pItr->plane.normal.dot(Vector3(0,0,-1));
         if(1-dotWithNegativeZ < EPS && 1-dotWithNegativeZ > NEG_EPS) {
           // plane is already aligned, no transform necessary
