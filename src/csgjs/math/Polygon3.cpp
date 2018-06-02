@@ -6,8 +6,8 @@ namespace csgjs {
   Polygon::Polygon(const std::vector<Vertex> &v, const Plane &p) : _boundingSphereCacheValid(false), _boundingBoxCacheValid(false), vertices(v), plane(p) {
 #ifdef CSGJS_DEBUG
     if(!checkIfConvex()) {
-      std::cout << *this << std::endl;
-      throw std::runtime_error("Not convex!");
+      std::cout << "not convex " << *this << std::endl;
+//      throw std::runtime_error("Not convex!");
     }
 #endif
   }
@@ -15,8 +15,8 @@ namespace csgjs {
   Polygon::Polygon(std::vector<Vertex> &&v, const Plane &p) : _boundingSphereCacheValid(false), _boundingBoxCacheValid(false), vertices(v), plane(p) {
 #ifdef CSGJS_DEBUG
     if(!checkIfConvex()) {
-      std::cout << *this << std::endl;
-      throw std::runtime_error("Not convex!");
+      std::cout << "not convex " << *this << std::endl;
+//      throw std::runtime_error("Not convex!");
     }
 #endif
   }
@@ -25,8 +25,8 @@ namespace csgjs {
     plane = Plane::fromVector3s(vertices[0].pos, vertices[1].pos, vertices[2].pos);
 #ifdef CSGJS_DEBUG
     if(!checkIfConvex()) {
-      std::cout << *this << std::endl;
-      throw std::runtime_error("Not convex!");
+      std::cout << "not convex " << *this << std::endl;
+//      throw std::runtime_error("Not convex!");
     }
 #endif
   }

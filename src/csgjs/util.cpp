@@ -45,7 +45,11 @@ namespace csgjs {
         verts.push_back(Vertex(Vector3(p2.x, p2.y, p2.z)));
         verts.push_back(Vertex(Vector3(p3.x, p3.y, p3.z)));
 
-        polys.push_back(Polygon(verts));
+        Polygon p(verts);
+
+        if(p.checkIfConvex()) {
+          polys.push_back(Polygon(verts));
+        }
     }
 
     fclose(f);
