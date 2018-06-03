@@ -46,6 +46,42 @@ namespace csgjs {
     return Polygon(std::move(newVertices), newPlane);
   }
 
+  bool Polygon::checkIfDegenerateTriangle() const {
+    int numVertices = vertices.size();
+    if(numVertices == 3) {
+      Vector3 v1 = (vertices[2].pos-vertices[0].pos);
+      Vector3 v2 = (vertices[1].pos-vertices[0].pos);
+      Vector3 v3 = (vertices[2].pos-vertices[1].pos);
+
+      double a = v1.length();
+      double b = v2.length();
+      double c = v3.length();
+
+      if(a > c) {
+        double tmp = c;
+        c = a;
+        a = tmp;
+      }
+
+      if(a > b) {
+        double tmp = b;
+        b = a;
+        a = tmp;
+      }
+
+      if(b > c) {
+        double tmp = c;
+        c = b;
+        b = tmp;
+      }
+
+      double d = a+b-c;
+
+      return (d < EPS);
+    }
+    return false;
+  }
+
   bool Polygon::checkIfConvex() const {
     int numVertices = vertices.size();
     if(numVertices > 2) {

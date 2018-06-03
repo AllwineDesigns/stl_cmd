@@ -47,7 +47,9 @@ namespace csgjs {
 
         Polygon p(verts);
 
-        if(p.checkIfConvex()) {
+        if(p.checkIfDegenerateTriangle()) {
+//          std::cout << "found degenerate triangle, ignoring" << std::endl;
+        } else {
           polys.push_back(Polygon(verts));
         }
     }

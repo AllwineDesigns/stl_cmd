@@ -19,6 +19,7 @@ class Polygon {
     Polygon(const std::vector<Vertex> &v);
     Polygon();
 
+    bool checkIfDegenerateTriangle() const; // checks if polygon has 3 vertices and if they're a degenerate triangle
     bool checkIfConvex() const;
     std::pair<Vector3, csgjs_real> boundingSphere() const;
     std::pair<Vector3, Vector3> boundingBox() const;
