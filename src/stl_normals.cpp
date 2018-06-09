@@ -33,6 +33,7 @@ void print_usage() {
     fprintf(stderr, "    Checks the stored normals against calculated normals based on ordering of vertices.\n"
                     "     -c - if present will ignore the present normal values and calculate them based on the vertex ordering.\n"
                     "     -r - if present will reverse the winding order of the vertices.\n"
+                    "     -w - if present will correct the winding order of the vertices based on the direction of the stored normal.\n"
                     "     -v - be verboze when printing out differing normals\n");
 }
 
@@ -51,13 +52,14 @@ int main(int argc, char** argv) {
     int reverse = 0;
     int needs_out = 0;
     int verbose = 0;
+    int calc_winding = 0;
 
     if(argc == 1) {
         print_usage();
         exit(2);
     }
 
-    while((c = getopt(argc, argv, "vcr")) != -1) {
+    while((c = getopt(argc, argv, "vcrw")) != -1) {
         switch(c) {
             case 'c':
                 calc = 1;
@@ -68,6 +70,10 @@ int main(int argc, char** argv) {
                 break;
             case 'r':
                 reverse = 1;
+                needs_out = 1;
+                break;
+            case 'w':
+                calc_winding = 1;
                 needs_out = 1;
                 break;
             case '?':
@@ -137,7 +143,6 @@ int main(int argc, char** argv) {
 
     vec p1,p2,p3;
     vec n,cn;
-    vec diff;
     p1.w = 1;
     p2.w = 1;
     p3.w = 1;
@@ -168,10 +173,7 @@ int main(int argc, char** argv) {
              cn.z != 0) {
             vec_normalize(&cn, &cn);
         }
-        vec_sub(&cn, &n, &diff);
-        if(!(diff.x < EPSILON && diff.x > -EPSILON &&
-            diff.y < EPSILON && diff.y > -EPSILON &&
-              diff.z < EPSILON && diff.z > -EPSILON)) {
+        if(vec_dot(&cn, &n) < 0) {
             match = 0;
             if(verbose) {
                 fprintf(stderr, "calculated normal %d different than input normal\n", i);
@@ -180,9 +182,12 @@ int main(int argc, char** argv) {
             }
         }
 
+        const float dot = vec_dot(&cn, &n);
+
         if(needs_out) {
             if(calc) {
-                if(reverse) {
+                if(reverse ||
+                   (calc_winding && dot <= 0)) {
                     cn.x *= -1;
                     cn.y *= -1;
                     cn.z *= -1;
@@ -196,6 +201,16 @@ int main(int argc, char** argv) {
                 fwrite(&p3, 1, 12, outf);
                 fwrite(&p2, 1, 12, outf);
                 fwrite(&p1, 1, 12, outf);
+            } else if(calc_winding) {
+              if(dot > 0) {
+                fwrite(&p1, 1, 12, outf);
+                fwrite(&p2, 1, 12, outf);
+                fwrite(&p3, 1, 12, outf);
+              } else {
+                fwrite(&p3, 1, 12, outf);
+                fwrite(&p2, 1, 12, outf);
+                fwrite(&p1, 1, 12, outf);
+              }
             } else {
                 fwrite(&p1, 1, 12, outf);
                 fwrite(&p2, 1, 12, outf);
