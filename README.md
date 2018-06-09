@@ -6,7 +6,7 @@ The goal of each stl_cmd is to provide a simple command line interface for manip
 Getting started
 ---------------
 
-    git clone https://github.com/frknsweetapps/stl_cmd.git
+    git clone https://github.com/AllwineDesigns/stl_cmd.git
     cd stl_cmd
     make
     make install # will install to /usr/local/bin by default
