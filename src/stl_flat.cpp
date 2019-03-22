@@ -25,6 +25,7 @@ Copyright 2018 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include <unordered_map>
 #include <algorithm>
 #include <iostream>
+#include <cstring>
 
 #ifndef M_PI
 #define M_PI 3.141592653589
