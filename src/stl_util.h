@@ -20,6 +20,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 */
 
 #ifndef ___STL_UTIL_H___
+#define ___STL_UTIL_H___
 
 #include <stdint.h>
 #include <sys/stat.h>
@@ -31,7 +32,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
 #define EPSILON 0.0001f
 
-int is_valid_binary_stl(char* filename) {
+inline int is_valid_binary_stl(char* filename) {
     FILE *f;
     f = fopen(filename, "rb");
 
@@ -86,14 +87,14 @@ typedef struct {
     float w;
 } vec;
 
-void mat_print(mat *m) {
+inline void mat_print(mat *m) {
     printf("%f %f %f %f\n", m->xx, m->xy, m->xz, m->xw);
     printf("%f %f %f %f\n", m->yx, m->yy, m->yz, m->yw);
     printf("%f %f %f %f\n", m->zx, m->zy, m->zz, m->zw);
     printf("%f %f %f %f\n", m->tx, m->ty, m->tz, m->tw);
 }
 
-void init_identity_mat(mat *m) {
+inline void init_identity_mat(mat *m) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -115,7 +116,7 @@ void init_identity_mat(mat *m) {
     m->tw = 1;
 }
 
-void init_s_mat(mat *m, float s) {
+inline void init_s_mat(mat *m, float s) {
     m->xx = s;
     m->xy = 0;
     m->xz = 0;
@@ -137,7 +138,7 @@ void init_s_mat(mat *m, float s) {
     m->tw = 1;
 }
 
-void init_sx_mat(mat *m, float s) {
+inline void init_sx_mat(mat *m, float s) {
     m->xx = s;
     m->xy = 0;
     m->xz = 0;
@@ -159,7 +160,7 @@ void init_sx_mat(mat *m, float s) {
     m->tw = 1;
 }
 
-void init_sy_mat(mat *m, float s) {
+inline void init_sy_mat(mat *m, float s) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -181,7 +182,7 @@ void init_sy_mat(mat *m, float s) {
     m->tw = 1;
 }
 
-void init_sz_mat(mat *m, float s) {
+inline void init_sz_mat(mat *m, float s) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -203,7 +204,7 @@ void init_sz_mat(mat *m, float s) {
     m->tw = 1;
 }
 
-void init_rx_mat(mat *m, float angle) {
+inline void init_rx_mat(mat *m, float angle) {
     angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
@@ -230,7 +231,7 @@ void init_rx_mat(mat *m, float angle) {
     m->tw = 1;
 }
 
-void init_ry_mat(mat *m, float angle) {
+inline void init_ry_mat(mat *m, float angle) {
     angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
@@ -257,7 +258,7 @@ void init_ry_mat(mat *m, float angle) {
     m->tw = 1;
 }
 
-void init_rz_mat(mat *m, float angle) {
+inline void init_rz_mat(mat *m, float angle) {
     angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
@@ -284,7 +285,7 @@ void init_rz_mat(mat *m, float angle) {
     m->tw = 1;
 }
 
-void init_tx_mat(mat *m, float t) {
+inline void init_tx_mat(mat *m, float t) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -306,7 +307,7 @@ void init_tx_mat(mat *m, float t) {
     m->tw = 1;
 }
 
-void init_ty_mat(mat *m, float t) {
+inline void init_ty_mat(mat *m, float t) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -328,7 +329,7 @@ void init_ty_mat(mat *m, float t) {
     m->tw = 1;
 }
 
-void init_tz_mat(mat *m, float t) {
+inline void init_tz_mat(mat *m, float t) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -350,7 +351,7 @@ void init_tz_mat(mat *m, float t) {
     m->tw = 1;
 }
 
-void init_inv_s_mat(mat *m, float s) {
+inline void init_inv_s_mat(mat *m, float s) {
     m->xx = 1./s;
     m->xy = 0;
     m->xz = 0;
@@ -372,7 +373,7 @@ void init_inv_s_mat(mat *m, float s) {
     m->tw = 1;
 }
 
-void init_inv_sx_mat(mat *m, float s) {
+inline void init_inv_sx_mat(mat *m, float s) {
     m->xx = 1./s;
     m->xy = 0;
     m->xz = 0;
@@ -394,7 +395,7 @@ void init_inv_sx_mat(mat *m, float s) {
     m->tw = 1;
 }
 
-void init_inv_sy_mat(mat *m, float s) {
+inline void init_inv_sy_mat(mat *m, float s) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -416,7 +417,7 @@ void init_inv_sy_mat(mat *m, float s) {
     m->tw = 1;
 }
 
-void init_inv_sz_mat(mat *m, float s) {
+inline void init_inv_sz_mat(mat *m, float s) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -438,7 +439,7 @@ void init_inv_sz_mat(mat *m, float s) {
     m->tw = 1;
 }
 
-void init_inv_rx_mat(mat *m, float angle) {
+inline void init_inv_rx_mat(mat *m, float angle) {
     angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
@@ -465,7 +466,7 @@ void init_inv_rx_mat(mat *m, float angle) {
     m->tw = 1;
 }
 
-void init_inv_ry_mat(mat *m, float angle) {
+inline void init_inv_ry_mat(mat *m, float angle) {
     angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
@@ -492,7 +493,7 @@ void init_inv_ry_mat(mat *m, float angle) {
     m->tw = 1;
 }
 
-void init_inv_rz_mat(mat *m, float angle) {
+inline void init_inv_rz_mat(mat *m, float angle) {
     angle *= M_PI/180; // convert to radians
 
     float cosa = cos(angle);
@@ -519,7 +520,7 @@ void init_inv_rz_mat(mat *m, float angle) {
     m->tw = 1;
 }
 
-void init_inv_tx_mat(mat *m, float t) {
+inline void init_inv_tx_mat(mat *m, float t) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -541,7 +542,7 @@ void init_inv_tx_mat(mat *m, float t) {
     m->tw = 1;
 }
 
-void init_inv_ty_mat(mat *m, float t) {
+inline void init_inv_ty_mat(mat *m, float t) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -563,7 +564,7 @@ void init_inv_ty_mat(mat *m, float t) {
     m->tw = 1;
 }
 
-void init_inv_tz_mat(mat *m, float t) {
+inline void init_inv_tz_mat(mat *m, float t) {
     m->xx = 1;
     m->xy = 0;
     m->xz = 0;
@@ -585,7 +586,7 @@ void init_inv_tz_mat(mat *m, float t) {
     m->tw = 1;
 }
 
-void mat_transpose(mat *m, mat *out) {
+inline void mat_transpose(mat *m, mat *out) {
     out->xx = m->xx;
     out->xy = m->yx;
     out->xz = m->zx;
@@ -607,7 +608,7 @@ void mat_transpose(mat *m, mat *out) {
     out->tw = m->tw;
 }
 
-void mat_mult(mat *m1, mat *m2, mat *out) {
+inline void mat_mult(mat *m1, mat *m2, mat *out) {
     out->xx = m1->xx*m2->xx+m1->xy*m2->yx+m1->xz*m2->zx+m1->xw*m2->tx; 
     out->xy = m1->xx*m2->xy+m1->xy*m2->yy+m1->xz*m2->zy+m1->xw*m2->ty; 
     out->xz = m1->xx*m2->xz+m1->xy*m2->yz+m1->xz*m2->zz+m1->xw*m2->tz; 
@@ -629,44 +630,44 @@ void mat_mult(mat *m1, mat *m2, mat *out) {
     out->tw = m1->tx*m2->xw+m1->ty*m2->yw+m1->tz*m2->zw+m1->tw*m2->tw;
 }
 
-void vec_mat_mult(vec *v, mat *m, vec *out) {
+inline void vec_mat_mult(vec *v, mat *m, vec *out) {
     out->x = v->x*m->xx+v->y*m->yx+v->z*m->zx+v->w*m->tx; 
     out->y = v->x*m->xy+v->y*m->yy+v->z*m->zy+v->w*m->ty; 
     out->z = v->x*m->xz+v->y*m->yz+v->z*m->zz+v->w*m->tz; 
     out->w = v->x*m->xw+v->y*m->yw+v->z*m->zw+v->w*m->tw;
 }
 
-float vec_magnitude(vec *v) {
+inline float vec_magnitude(vec *v) {
     return sqrt(v->x*v->x+v->y*v->y+v->z*v->z);
 }
 
-void vec_normalize(vec *v, vec *out) {
+inline void vec_normalize(vec *v, vec *out) {
     float invmag = 1./vec_magnitude(v);
     out->x = v->x*invmag;
     out->y = v->y*invmag;
     out->z = v->z*invmag;
 }
 
-int vec_equals(vec *v, vec *v2) {
+inline int vec_equals(vec *v, vec *v2) {
     return fabs(v->x-v2->x) < EPSILON &&
            fabs(v->y-v2->y) < EPSILON &&
            fabs(v->z-v2->z) < EPSILON;
 }
 
-int vec_equals_exact(vec *v, vec *v2) {
+inline int vec_equals_exact(vec *v, vec *v2) {
     return v->x-v2->x == 0 &&
            v->y-v2->y == 0 &&
            v->z-v2->z == 0;
 }
 
-void vec_copy(vec *v, vec *out) {
+inline void vec_copy(vec *v, vec *out) {
     out->x = v->x;
     out->y = v->y;
     out->z = v->z;
     out->w = v->w;
 }
 
-void mat_copy(mat *m1, mat *out) {
+inline void mat_copy(mat *m1, mat *out) {
     out->xx = m1->xx;
     out->xy = m1->xy;
     out->xz = m1->xz;
@@ -688,23 +689,23 @@ void mat_copy(mat *m1, mat *out) {
     out->tw = m1->tw;
 }
 
-void vec_cross(vec *a, vec *b, vec *out) {
+inline void vec_cross(vec *a, vec *b, vec *out) {
     out->x = a->y*b->z-a->z*b->y;
     out->y = a->z*b->x-a->x*b->z;
     out->z = a->x*b->y-a->y*b->x;
 }
 
-void vec_sub(vec *a, vec *b, vec *out) {
+inline void vec_sub(vec *a, vec *b, vec *out) {
     out->x = a->x-b->x;
     out->y = a->y-b->y;
     out->z = a->z-b->z;
 }
 
-float vec_dot(vec *a, vec *b) {
+inline float vec_dot(vec *a, vec *b) {
     return a->x*b->x+a->y*b->y+a->z*b->z;
 }
 
-void write_tri(FILE *f,
+inline void write_tri(FILE *f,
                 vec *p1, 
                 vec *p2, 
                 vec *p3, int rev) {
@@ -732,7 +733,7 @@ void write_tri(FILE *f,
     fwrite(&abc,1,  2, f);
 }
 
-void write_quad(FILE *f,
+inline void write_quad(FILE *f,
                 vec *p1, 
                 vec *p2, 
                 vec *p3, 

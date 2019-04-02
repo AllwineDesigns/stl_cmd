@@ -5,7 +5,7 @@ VERSION=1.1
 DOCS_DIR := man
 BIN_DIR := bin
 CMDS := $(addprefix $(BIN_DIR)/,stl_header stl_merge stl_transform stl_count stl_bbox stl_cube stl_sphere stl_cylinder stl_cone stl_torus stl_empty stl_threads stl_normals stl_convex stl_borders stl_spreadsheet stl_area stl_bcylinder)
-CSGJS_CMDS := $(addprefix $(BIN_DIR)/,stl_boolean stl_flat)
+CSGJS_CMDS := $(addprefix $(BIN_DIR)/,stl_boolean stl_flat stl_decimate)
 
 ALL_CMDS := $(CSGJS_CMDS) $(CMDS)
 
@@ -18,7 +18,7 @@ all: $(CMDS) $(CSGJS_CMDS)
 $(CMDS): $(BIN_DIR)/%: src/%.cpp src/stl_util.h
 	$(CC) $(FLAGS) $(CPPFLAGS) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) $(OUTPUT_OPTION) $<
 
-$(CSGJS_CMDS): $(BIN_DIR)/%: src/%.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp src/csgjs/math/*.h src/csgjs/*.h
+$(CSGJS_CMDS): $(BIN_DIR)/%: src/%.cpp src/csgjs/*.cpp src/csgjs/math/*.cpp src/csgjs/math/*.h src/csgjs/*.h src/Simplify.h
 	$(CC) $(FLAGS) $(CPPFLAGS) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) src/csgjs/*.cpp src/csgjs/math/*.cpp -Isrc $(OUTPUT_OPTION) $< 
 
 $(CMDS): | $(BIN_DIR)
