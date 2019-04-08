@@ -82,6 +82,8 @@ int main(int argc, char** argv) {
       target_count = min(percentage*Simplify::triangles.size(), target_count);
     } else if(percentage > -1) {
       target_count = percentage*Simplify::triangles.size();
+    } else if(target_count > -1) {
+      target_count = min(Simplify::triangles.size(), target_count);
     } else {
       target_count = .5*Simplify::triangles.size();
     }
