@@ -31,8 +31,38 @@
 #include "csgjs/math/HashKeys.h"
 #include <unordered_map>
 
-using csgjs::VertexKey;
 using csgjs::Vector3;
+
+struct VertexKey {
+  float x;
+  float y;
+  float z;
+  VertexKey() : x(0), y(0), z(0) {}
+  VertexKey(float xx, float yy, float zz, bool exact = false) {
+    if(exact) {
+      x = xx;
+      y = yy;
+      z = zz;
+    } else {
+      x = (float)(int)(std::round((double)xx/EPSILON));
+      y = (float)(int)(std::round((double)yy/EPSILON));
+      z = (float)(int)(std::round((double)zz/EPSILON));
+    }
+  }
+
+  bool operator==(const VertexKey& k) const {
+    return x == k.x && y == k.y && z == k.z;
+  }
+};
+
+namespace std {
+  template <>
+  struct hash<VertexKey> {
+    std::size_t operator()(const VertexKey& k) const {
+      return ((std::hash<float>()(k.x) ^ (std::hash<float>()(k.y) << 1)) >> 1) ^ (hash<float>()(k.z) << 1);
+    }
+  };
+}
 
 #define loopi(start_l,end_l) for ( int i=start_l;i<end_l;++i )
 #define loopi(start_l,end_l) for ( int i=start_l;i<end_l;++i )
@@ -1012,11 +1042,7 @@ namespace Simplify
               readBytes = fread(&point3, 1, 12,f);
               readBytes = fread(&abc, 1, 2,f);
 
-              vector3.x = point1.x;
-              vector3.y = point1.y;
-              vector3.z = point1.z;
-
-              VertexKey k(vector3);
+              VertexKey k(point1.x, point1.y, point1.z, true);
               if(vertexMap.count(k) > 0) {
                 i0 = vertexMap[k];
               } else {
@@ -1028,10 +1054,7 @@ namespace Simplify
                 vertices.push_back(v);
               }
 
-              vector3.x = point2.x;
-              vector3.y = point2.y;
-              vector3.z = point2.z;
-              k = VertexKey(vector3);
+              k = VertexKey(point2.x, point2.y, point2.z, true);
               if(vertexMap.count(k) > 0) {
                 i1 = vertexMap[k];
               } else {
@@ -1043,10 +1066,7 @@ namespace Simplify
                 vertices.push_back(v);
               }
 
-              vector3.x = point3.x;
-              vector3.y = point3.y;
-              vector3.z = point3.z;
-              k = VertexKey(vector3);
+              k = VertexKey(point3.x, point3.y, point3.z, true);
               if(vertexMap.count(k) > 0) {
                 i2 = vertexMap[k];
               } else {

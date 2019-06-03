@@ -32,19 +32,27 @@ Copyright 2017 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
 void print_usage() {
     fprintf(stderr, "stl_borders prints how many border edges there are in a given STL file.\n\n");
-    fprintf(stderr, "usage: stl_borders [ <input file> ]\n");
+    fprintf(stderr, "usage: stl_borders [ -e ] [ -i ] [ <input file> ]\n");
     fprintf(stderr, "    Prints how many border edges there are. For a watertight, manifold model, it will be 0.\n");
+    fprintf(stderr, "    -e - will use the vertices exactly as stored rather than consolidating vertices that are very close together\n");
+    fprintf(stderr, "    -i - ignore degenerate triangles (those with area very near or exactly 0).");
 }
 
 struct VertexKey {
-  int x;
-  int y;
-  int z;
+  float x;
+  float y;
+  float z;
   VertexKey() : x(0), y(0), z(0) {}
-  VertexKey(float xx, float yy, float zz) {
-    x = (int)(std::round((double)xx/EPSILON));
-    y = (int)(std::round((double)yy/EPSILON));
-    z = (int)(std::round((double)zz/EPSILON));
+  VertexKey(float xx, float yy, float zz, bool exact = false) {
+    if(exact) {
+      x = xx;
+      y = yy;
+      z = zz;
+    } else {
+      x = (float)(int)(std::round((double)xx/EPSILON));
+      y = (float)(int)(std::round((double)yy/EPSILON));
+      z = (float)(int)(std::round((double)zz/EPSILON));
+    }
   }
 
   bool operator==(const VertexKey& k) const {
@@ -56,7 +64,7 @@ namespace std {
   template <>
   struct hash<VertexKey> {
     std::size_t operator()(const VertexKey& k) const {
-      return ((std::hash<int>()(k.x) ^ (std::hash<int>()(k.y) << 1)) >> 1) ^ (hash<int>()(k.z) << 1);
+      return ((std::hash<float>()(k.x) ^ (std::hash<float>()(k.y) << 1)) >> 1) ^ (hash<float>()(k.z) << 1);
     }
   };
 }
@@ -66,32 +74,8 @@ struct EdgeKey {
   VertexKey v2;
 
   EdgeKey(const VertexKey &a, const VertexKey &b) {
-    if(a.x < b.x) {
-      v1 = a;
-      v2 = b;
-    } else if(a.x > b.x) {
-      v2 = a;
-      v1 = b;
-    } else {
-      if(a.y < b.y) {
-        v1 = a;
-        v2 = b;
-      } else if(a.y > b.y) {
-        v2 = a;
-        v1 = b;
-      } else {
-        if(a.z < b.z) {
-          v1 = a;
-          v2 = b;
-        } else if(a.z > b.z) {
-          v2 = a;
-          v1 = b;
-        } else {
-          v1 = a;
-          v2 = b;
-        }
-      }
-    }
+    v1 = a;
+    v2 = b;
   }
 
   bool operator==(const EdgeKey &k) const {
@@ -118,9 +102,17 @@ int main(int argc, char** argv) {
     }
     int errflg = 0;
     int c;
+    bool exactKeys = false;
+    bool ignoreDegenerateFaces = false;
 
-    while((c = getopt(argc, argv, "")) != -1) {
+    while((c = getopt(argc, argv, "ei")) != -1) {
         switch(c) {
+            case 'i':
+                ignoreDegenerateFaces = true;
+                break;
+            case 'e':
+                exactKeys = true;
+                break;
             case '?':
                 fprintf(stderr, "Unrecognized option: '-%c'\n", optopt);
                 errflg++;
@@ -155,6 +147,7 @@ int main(int argc, char** argv) {
 
     std::unordered_map<EdgeKey, int> edgeCounts;
 
+    int ignoredFaces = 0;
     for(int i = 0; i < num_tris; i++) {
       vec normal;
       vec p0;
@@ -167,9 +160,31 @@ int main(int argc, char** argv) {
       readBytes = fread(&p2, 1, 12,f);
       readBytes = fread(&abc, 1, 2,f);
 
-      VertexKey v0(p0.x, p0.y, p0.z);
-      VertexKey v1(p1.x, p1.y, p1.z);
-      VertexKey v2(p2.x, p2.y, p2.z);
+      if(ignoreDegenerateFaces) {
+        vec vec1;
+        vec vec2;
+
+        vec1.x = p1.x-p0.x;
+        vec1.y = p1.y-p0.y;
+        vec1.z = p1.z-p0.z;
+
+        vec2.x = p2.x-p0.x;
+        vec2.y = p2.y-p0.y;
+        vec2.z = p2.z-p0.z;
+
+        vec cross;
+
+        vec_cross(&vec1, &vec2, &cross);
+        float area = .5*vec_magnitude(&cross);
+        if(area < EPSILON) {
+          ignoredFaces++;
+          continue;
+        }
+      }
+
+      VertexKey v0(p0.x, p0.y, p0.z, exactKeys);
+      VertexKey v1(p1.x, p1.y, p1.z, exactKeys);
+      VertexKey v2(p2.x, p2.y, p2.z, exactKeys);
 
       EdgeKey e0(v0,v1);
       EdgeKey e1(v1,v2);
@@ -198,8 +213,15 @@ int main(int argc, char** argv) {
 
     uint32_t borderEdges = 0;
     while(itr != edgeCounts.end()) {
-      if(itr->second == 1) {
-        borderEdges++;
+      VertexKey v1 = itr->first.v1;
+      VertexKey v2 = itr->first.v2;
+      EdgeKey reverseKey(v2, v1);
+      if(!edgeCounts.count(reverseKey) || itr->second > edgeCounts[reverseKey]) {
+        if(edgeCounts.count(reverseKey)) {
+          borderEdges += itr->second-edgeCounts[reverseKey];
+        } else {
+          borderEdges += itr->second;
+        }
       }
       ++itr;
     }
