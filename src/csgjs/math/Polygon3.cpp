@@ -122,7 +122,7 @@ namespace csgjs {
 
   // seems like this caching scheme could be an unnecessary optimization, but
   // this is how it was done in CSG.js, maybe try calculating the bounding box and sphere
-  // in the constructor to avoid any branching (it probably makes sense in JavaScript, 
+  // in the constructor to avoid any branching (it probably makes sense in JavaScript,
   // but I question the benefit in C++). It would come down to how often polygons are
   // constructed without ever needing a bounding box or sphere, which I'm not sure about.
   std::pair<Vector3, Vector3> Polygon::boundingBox() const {

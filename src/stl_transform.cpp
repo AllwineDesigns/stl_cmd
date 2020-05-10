@@ -28,8 +28,8 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
 #define BUFFER_SIZE 4096
 
-// TODO make input and output file optional, if not specified read from 
-// stdin and write to stdout. Add to other stl_cmds as well. This will 
+// TODO make input and output file optional, if not specified read from
+// stdin and write to stdout. Add to other stl_cmds as well. This will
 // allow for piping between stl_cmds which could elimate some temporary files:
 // stl_cube -w 1 | stl_transform -tx 10 > cube.stl
 // stl_cube -w 2 | stl_transform -tx 20 > cube2.stl
@@ -252,7 +252,7 @@ int main(int argc, char** argv) {
     fwrite(header, 80, 1, outf);
     fwrite(&num_tris, 4, 1, outf);
 
-    uint16_t abc = 0; // attribute byte count 
+    uint16_t abc = 0; // attribute byte count
 
     vec tmp_vec;
     vec normal;

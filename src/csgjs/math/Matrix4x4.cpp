@@ -61,7 +61,7 @@ namespace csgjs {
   }
 
   Matrix4x4 Matrix4x4::operator+(const Matrix4x4 &mat) const {
-    return Matrix4x4(m[0]+mat.m[0], 
+    return Matrix4x4(m[0]+mat.m[0],
                   m[1]+mat.m[1],
                   m[2]+mat.m[2],
                   m[3]+mat.m[3],
@@ -80,7 +80,7 @@ namespace csgjs {
   }
 
   Matrix4x4 Matrix4x4::operator-(const Matrix4x4 &mat) const {
-    return Matrix4x4(m[0]-mat.m[0], 
+    return Matrix4x4(m[0]-mat.m[0],
                   m[1]-mat.m[1],
                   m[2]-mat.m[2],
                   m[3]-mat.m[3],
@@ -132,7 +132,7 @@ namespace csgjs {
     const csgjs_real b31 = mat.m[13];
     const csgjs_real b32 = mat.m[14];
     const csgjs_real b33 = mat.m[15];
-    
+
     return Matrix4x4(a00*b00+a01*b10+a02*b20+a03*b30,
                      a00*b01+a01*b11+a02*b21+a03*b31,
                      a00*b02+a01*b12+a02*b22+a03*b32,
@@ -165,7 +165,7 @@ namespace csgjs {
 
     return Matrix4x4(
     // x
-      cos_angle+axis.x*axis.x*one_minus_cos_angle, 
+      cos_angle+axis.x*axis.x*one_minus_cos_angle,
       axis.y*axis.x*one_minus_cos_angle+axis.z*sin_angle,
       axis.z*axis.x*one_minus_cos_angle-axis.y*sin_angle,
       0,

@@ -9,8 +9,8 @@
 namespace csgjs {
 
 struct Vector3 {
-  csgjs_real x; 
-  csgjs_real y; 
+  csgjs_real x;
+  csgjs_real y;
   csgjs_real z;
 
   Vector3();

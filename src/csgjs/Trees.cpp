@@ -42,7 +42,7 @@ namespace csgjs {
     }
 
     // CSG.js did this iteratively rather than recursively. Probably safer to do iteratively, but starting with a recursive
-    // solution for ease of implementation. If it leads to stack overflows, will refactor. May see a performance improvement 
+    // solution for ease of implementation. If it leads to stack overflows, will refactor. May see a performance improvement
     // when implemented iteratively, so it might be worth trying.
     if(frontNodes.size() > 0) {
       front = new Node(this);
@@ -228,7 +228,7 @@ namespace csgjs {
 
   // Like addPolygonTreeNodes, this was implemented iteratively in CSG.js, but we're doing it recursively here.
   // Might be worth revisiting.
-  void PolygonTreeNode::splitByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes, 
+  void PolygonTreeNode::splitByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes,
                                                          std::vector<PolygonTreeNode*> &coplanarBackNodes,
                                                          std::vector<PolygonTreeNode*> &frontNodes,
                                                          std::vector<PolygonTreeNode*> &backNodes) {
@@ -247,7 +247,7 @@ namespace csgjs {
     }
   }
 
-  void PolygonTreeNode::splitLeafByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes, 
+  void PolygonTreeNode::splitLeafByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes,
                                                              std::vector<PolygonTreeNode*> &coplanarBackNodes,
                                                              std::vector<PolygonTreeNode*> &frontNodes,
                                                              std::vector<PolygonTreeNode*> &backNodes) {
@@ -292,12 +292,12 @@ namespace csgjs {
     invertRecurse();
   }
 
-  void PolygonTreeNode::splitPolygonByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes, 
+  void PolygonTreeNode::splitPolygonByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes,
                                                                 std::vector<PolygonTreeNode*> &coplanarBackNodes,
                                                                 std::vector<PolygonTreeNode*> &frontNodes,
                                                                 std::vector<PolygonTreeNode*> &backNodes) {
     if(plane == polygon.plane) {
-      // if the polygon's plane is exactly the same as the cutting plane it as a coplanar front 
+      // if the polygon's plane is exactly the same as the cutting plane it as a coplanar front
       coplanarFrontNodes.push_back(this);
     } else {
       std::vector<bool> vertexIsBack;

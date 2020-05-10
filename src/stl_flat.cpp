@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
 
       Vector3 a = polyItr->vertices[1].pos-polyItr->vertices[0].pos;
       Vector3 b = polyItr->vertices[2].pos-polyItr->vertices[0].pos;
-      
+
       areaSorter.area[key] += a.cross(b).length()*.5;
 
       ++polyItr;
@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
 
     // once quickhull is implemented for use in stl_hull, using the convex hull rather than the
     // actual model would probably go much faster for large models
-    // potentially using an unordered_map to look up planes in the convex hull rather than needing the 
+    // potentially using an unordered_map to look up planes in the convex hull rather than needing the
     // binary space partitioning tree at all
     Tree tree(polys);
 
@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
           WriteSTLFile(out_filename, polys);
           exit(0);
         } else if(-1-dotWithNegativeZ < EPS && -1-dotWithNegativeZ > NEG_EPS) {
-          // plane is oriented 180 degrees 
+          // plane is oriented 180 degrees
           Vector3 axis = Vector3(1,0,0);
           csgjs_real angle = M_PI;
 

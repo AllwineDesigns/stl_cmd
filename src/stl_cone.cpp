@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
 
     fwrite(header, 80, 1, outf);
     uint32_t num_tris;
-    uint16_t abc = 0; // attribute byte count 
+    uint16_t abc = 0; // attribute byte count
     vec p0;
     vec p1;
     vec p2;

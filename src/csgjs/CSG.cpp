@@ -197,7 +197,7 @@ namespace csgjs {
     // 5. For each vertex we encounter, split the currently active edges into 2 (edge A-------B will be come A----V----B, AB -> AV and VB), making sure to update the edge's corresponding polygon.
 
     // 1. E = unmatchedEdges
-    std::unordered_map<EdgeKey, PolygonEdgeData> unmatchedEdges; 
+    std::unordered_map<EdgeKey, PolygonEdgeData> unmatchedEdges;
     findUnmatchedEdges(unmatchedEdges);
 
     // 2. Add all colinear edges in unmatchedEdges to its own list
@@ -392,16 +392,16 @@ namespace csgjs {
     }
 
 #ifdef CSGJS_DEBUG
-    std::unordered_map<EdgeKey, PolygonEdgeData> stillUnmatched; 
+    std::unordered_map<EdgeKey, PolygonEdgeData> stillUnmatched;
     findUnmatchedEdges(stillUnmatched);
 
     if(stillUnmatched.size() > 0) {
       std::cout << "still " << stillUnmatched.size() << " unmatched edges" << std::endl;
-      std::unordered_map<EdgeKey, PolygonEdgeData>::iterator itr = stillUnmatched.begin(); 
+      std::unordered_map<EdgeKey, PolygonEdgeData>::iterator itr = stillUnmatched.begin();
       while(itr != stillUnmatched.end()) {
         LineKey lineKey(Line::fromPoints(itr->first.first, itr->first.second));
         std::cout << itr->first.hash << " " << itr->second.first << " " << itr->second.second << " " << lineKey.hash << " " << lineKey.line << std::endl;
-        
+
         ++itr;
       }
 

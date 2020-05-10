@@ -52,7 +52,7 @@ inline int is_valid_binary_stl(char* filename) {
 //                fprintf(stderr, "  num triangles: %10d\n", num_tris);
 //                fprintf(stderr, "calculated size: %10lld\n", calced_size);
                 return 0;
-            } 
+            }
         } else {
             return 0;
         }
@@ -78,7 +78,7 @@ typedef struct {
     float ty;
     float tz;
     float tw;
-} mat; 
+} mat;
 
 typedef struct {
     float x;
@@ -609,31 +609,31 @@ inline void mat_transpose(mat *m, mat *out) {
 }
 
 inline void mat_mult(mat *m1, mat *m2, mat *out) {
-    out->xx = m1->xx*m2->xx+m1->xy*m2->yx+m1->xz*m2->zx+m1->xw*m2->tx; 
-    out->xy = m1->xx*m2->xy+m1->xy*m2->yy+m1->xz*m2->zy+m1->xw*m2->ty; 
-    out->xz = m1->xx*m2->xz+m1->xy*m2->yz+m1->xz*m2->zz+m1->xw*m2->tz; 
+    out->xx = m1->xx*m2->xx+m1->xy*m2->yx+m1->xz*m2->zx+m1->xw*m2->tx;
+    out->xy = m1->xx*m2->xy+m1->xy*m2->yy+m1->xz*m2->zy+m1->xw*m2->ty;
+    out->xz = m1->xx*m2->xz+m1->xy*m2->yz+m1->xz*m2->zz+m1->xw*m2->tz;
     out->xw = m1->xx*m2->xw+m1->xy*m2->yw+m1->xz*m2->zw+m1->xw*m2->tw;
 
-    out->yx = m1->yx*m2->xx+m1->yy*m2->yx+m1->yz*m2->zx+m1->yw*m2->tx; 
-    out->yy = m1->yx*m2->xy+m1->yy*m2->yy+m1->yz*m2->zy+m1->yw*m2->ty; 
-    out->yz = m1->yx*m2->xz+m1->yy*m2->yz+m1->yz*m2->zz+m1->yw*m2->tz; 
+    out->yx = m1->yx*m2->xx+m1->yy*m2->yx+m1->yz*m2->zx+m1->yw*m2->tx;
+    out->yy = m1->yx*m2->xy+m1->yy*m2->yy+m1->yz*m2->zy+m1->yw*m2->ty;
+    out->yz = m1->yx*m2->xz+m1->yy*m2->yz+m1->yz*m2->zz+m1->yw*m2->tz;
     out->yw = m1->yx*m2->xw+m1->yy*m2->yw+m1->yz*m2->zw+m1->yw*m2->tw;
 
-    out->zx = m1->zx*m2->xx+m1->zy*m2->yx+m1->zz*m2->zx+m1->zw*m2->tx; 
-    out->zy = m1->zx*m2->xy+m1->zy*m2->yy+m1->zz*m2->zy+m1->zw*m2->ty; 
-    out->zz = m1->zx*m2->xz+m1->zy*m2->yz+m1->zz*m2->zz+m1->zw*m2->tz; 
+    out->zx = m1->zx*m2->xx+m1->zy*m2->yx+m1->zz*m2->zx+m1->zw*m2->tx;
+    out->zy = m1->zx*m2->xy+m1->zy*m2->yy+m1->zz*m2->zy+m1->zw*m2->ty;
+    out->zz = m1->zx*m2->xz+m1->zy*m2->yz+m1->zz*m2->zz+m1->zw*m2->tz;
     out->zw = m1->zx*m2->xw+m1->zy*m2->yw+m1->zz*m2->zw+m1->zw*m2->tw;
 
-    out->tx = m1->tx*m2->xx+m1->ty*m2->yx+m1->tz*m2->zx+m1->tw*m2->tx; 
-    out->ty = m1->tx*m2->xy+m1->ty*m2->yy+m1->tz*m2->zy+m1->tw*m2->ty; 
-    out->tz = m1->tx*m2->xz+m1->ty*m2->yz+m1->tz*m2->zz+m1->tw*m2->tz; 
+    out->tx = m1->tx*m2->xx+m1->ty*m2->yx+m1->tz*m2->zx+m1->tw*m2->tx;
+    out->ty = m1->tx*m2->xy+m1->ty*m2->yy+m1->tz*m2->zy+m1->tw*m2->ty;
+    out->tz = m1->tx*m2->xz+m1->ty*m2->yz+m1->tz*m2->zz+m1->tw*m2->tz;
     out->tw = m1->tx*m2->xw+m1->ty*m2->yw+m1->tz*m2->zw+m1->tw*m2->tw;
 }
 
 inline void vec_mat_mult(vec *v, mat *m, vec *out) {
-    out->x = v->x*m->xx+v->y*m->yx+v->z*m->zx+v->w*m->tx; 
-    out->y = v->x*m->xy+v->y*m->yy+v->z*m->zy+v->w*m->ty; 
-    out->z = v->x*m->xz+v->y*m->yz+v->z*m->zz+v->w*m->tz; 
+    out->x = v->x*m->xx+v->y*m->yx+v->z*m->zx+v->w*m->tx;
+    out->y = v->x*m->xy+v->y*m->yy+v->z*m->zy+v->w*m->ty;
+    out->z = v->x*m->xz+v->y*m->yz+v->z*m->zz+v->w*m->tz;
     out->w = v->x*m->xw+v->y*m->yw+v->z*m->zw+v->w*m->tw;
 }
 
@@ -706,8 +706,8 @@ inline float vec_dot(vec *a, vec *b) {
 }
 
 inline void write_tri(FILE *f,
-                vec *p1, 
-                vec *p2, 
+                vec *p1,
+                vec *p2,
                 vec *p3, int rev) {
     if(rev) {
         vec *tmp = p1;
@@ -734,9 +734,9 @@ inline void write_tri(FILE *f,
 }
 
 inline void write_quad(FILE *f,
-                vec *p1, 
-                vec *p2, 
-                vec *p3, 
+                vec *p1,
+                vec *p2,
+                vec *p3,
                 vec *p4,int rev) {
     //write two triangles 1,2,3 and 1,3,4
     if(rev) {

@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
 
     fwrite(&num_tris, 4, 1, outf);
 
-    uint16_t abc = 0; // attribute byte count 
+    uint16_t abc = 0; // attribute byte count
 
 
     vec p0;
