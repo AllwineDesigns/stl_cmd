@@ -32,33 +32,45 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
 #define EPSILON 0.0001f
 
+inline int is_valid_binary_stl(FILE* f) {
+    if(!f) {
+      return 0;
+    }
+    long offset = ftell(f);
+    if(offset < 0) {
+        return 0;
+    }
+    int is_valid = 0;
+    struct stat st;
+    fstat(fileno(f), &st);
+
+    off_t size = st.st_size;
+    if(size >= 84) {
+        fseek(f, 80, SEEK_SET);
+
+        uint32_t num_tris;
+        size_t readBytes = fread(&num_tris, 4, 1, f);
+        uint64_t calced_size = 84+(4*12+2)*num_tris;
+        if(size == calced_size) {
+            is_valid = 1;
+        } else {
+//          fprintf(stderr, "    actual size: %10lld\n", size);
+//          fprintf(stderr, "  num triangles: %10d\n", num_tris);
+//          fprintf(stderr, "calculated size: %10lld\n", calced_size);
+        }
+    }
+    fseek(f, offset, SEEK_SET);
+    return is_valid;
+}
+
 inline int is_valid_binary_stl(char* filename) {
     FILE *f;
     f = fopen(filename, "rb");
-
+    int is_valid = is_valid_binary_stl(f);
     if(f) {
-        struct stat st;
-        fstat(fileno(f), &st);
-
-        off_t size = st.st_size;
-        if(size >= 84) {
-            fseek(f, 80, SEEK_SET);
-
-            uint32_t num_tris;
-            size_t readBytes = fread(&num_tris, 4, 1, f);
-            uint64_t calced_size = 84+(4*12+2)*num_tris;
-            if(size != calced_size) {
-//                fprintf(stderr, "    actual size: %10lld\n", size);
-//                fprintf(stderr, "  num triangles: %10d\n", num_tris);
-//                fprintf(stderr, "calculated size: %10lld\n", calced_size);
-                return 0;
-            }
-        } else {
-            return 0;
-        }
+      fclose(f);
     }
-
-    return 1;
+    return is_valid;
 }
 
 typedef struct {
@@ -86,6 +98,11 @@ typedef struct {
     float z;
     float w;
 } vec;
+
+typedef struct {
+    vec min;
+    vec max;
+} bounds;
 
 inline void mat_print(mat *m) {
     printf("%f %f %f %f\n", m->xx, m->xy, m->xz, m->xw);
@@ -776,6 +793,42 @@ inline void write_quad(FILE *f,
     fwrite(p3, 1, 12, f);
     fwrite(p4, 1, 12, f);
     fwrite(&abc,1,  2, f);
+}
+
+inline void get_bounds(FILE *f, bounds* b) {
+    long offset = ftell(f);
+    fseek(f, 80, SEEK_SET);
+
+    uint32_t num_tris;
+    size_t readBytes = fread(&num_tris, 4, 1, f);
+
+    vec point;
+    point.w = 1;
+
+    for(int i = 0; i < num_tris; i++) {
+        fseek(f, 12, SEEK_CUR); // normal
+
+        for(int j = 0; j < 3; j++) {
+            readBytes = fread(&point, 1, 12,f);
+            if(i == 0 && j == 0) {
+                b->min.x = point.x;
+                b->min.y = point.y;
+                b->min.z = point.z;
+                b->max.x = point.x;
+                b->max.y = point.y;
+                b->max.z = point.z;
+            } else {
+                if(b->min.x > point.x) b->min.x = point.x;
+                if(b->min.y > point.y) b->min.y = point.y;
+                if(b->min.z > point.z) b->min.z = point.z;
+                if(b->max.x < point.x) b->max.x = point.x;
+                if(b->max.y < point.y) b->max.y = point.y;
+                if(b->max.z < point.z) b->max.z = point.z;
+            }
+        }
+        fseek(f, 2, SEEK_CUR);
+    }
+    fseek(f, offset, SEEK_SET);
 }
 
 #endif
