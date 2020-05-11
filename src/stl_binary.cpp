@@ -37,7 +37,7 @@ void print_usage() {
 }
 
 int main(int argc, char** argv) {
-    if(argc > 1 && strcmp(argv[1], "--help") == 0) {
+    if (argc > 1 && strcmp(argv[1], "--help") == 0) {
         print_usage();
         exit(2);
     }
@@ -48,41 +48,41 @@ int main(int argc, char** argv) {
     if (argc >= 2) {
         in_file_name = argv[1];
         in_file = fopen(in_file_name, "rb");
-        if(!in_file) {
+        if (!in_file) {
             fprintf(stderr, "Can't read from file: %s\n", in_file_name);
         }
     }
     if (argc >= 3) {
         out_file_name = argv[2];
         out_file = fopen(out_file_name, "wb");
-        if(!out_file) {
+        if (!out_file) {
             fprintf(stderr, "Can't write to file: %s\n", out_file_name);
             fclose(in_file);
         }
     }
     char name[BUFFER_SIZE];
     memset(name, 0x00, BUFFER_SIZE);
-    facet triangle;
-    uint32_t triangle_count = 0;
+    facet_t facet;
+    uint32_t facet_count = 0;
 
     if (is_valid_ascii_stl(in_file)) {
         read_header(in_file, name, BUFFER_SIZE, NULL, 1);
-        write_header(out_file, name, triangle_count, 0);
-        while(read_facet(in_file, &triangle, 1)) {
-            write_facet(out_file, &triangle, 0);
-            triangle_count++;
+        write_header(out_file, name, facet_count, 0);
+        while (read_facet(in_file, &facet, 1)) {
+            write_facet(out_file, &facet, 0);
+            facet_count++;
         }
         read_final(in_file, 1);
-        write_final(out_file, name, triangle_count, 0);
+        write_final(out_file, name, facet_count, 0);
     } else if (is_valid_binary_stl(in_file)) {
-        read_header(in_file, name, BUFFER_SIZE, &triangle_count, 0);
-        write_header(out_file, name, triangle_count, 0);
-        for (int i = 0; i < triangle_count; i++) {
-            read_facet(in_file, &triangle, 0);
-            write_facet(out_file, &triangle, 0);
+        read_header(in_file, name, BUFFER_SIZE, &facet_count, 0);
+        write_header(out_file, name, facet_count, 0);
+        for (int i = 0; i < facet_count; i++) {
+            read_facet(in_file, &facet, 0);
+            write_facet(out_file, &facet, 0);
         }
         read_final(in_file, 0);
-        write_final(out_file, name, triangle_count, 0);
+        write_final(out_file, name, facet_count, 0);
     } else {
         fprintf(stderr, "Invalid STL file: %s\n", in_file_name);
         if (in_file != stdin) {

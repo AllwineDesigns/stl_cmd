@@ -45,16 +45,16 @@ int main(int argc, char** argv) {
     int do_base = 0;
     int done_flags = 0;
 
-    for(int arg = 1; arg < argc; arg++) {
-        if(!done_flags) {
-            if(argv[arg][0] == '-') {
-                if(strcmp(argv[arg], "--help") == 0) {
+    for (int arg = 1; arg < argc; arg++) {
+        if (!done_flags) {
+            if (argv[arg][0] == '-') {
+                if (strcmp(argv[arg], "--help") == 0) {
                     print_usage();
                     exit(2);
-                } else if(strcmp(argv[arg], "--") == 0) {
+                } else if (strcmp(argv[arg], "--") == 0) {
                     done_flags = 1;
                     continue;
-                } else if(strcmp(argv[arg], "-base") == 0) {
+                } else if (strcmp(argv[arg], "-base") == 0) {
                     do_base = 1;
                     continue;
                 } else {
@@ -70,14 +70,14 @@ int main(int argc, char** argv) {
         if (in_file == stdin) {
             in_file_name = argv[arg];
             in_file = fopen(in_file_name, "rb");
-            if(!in_file) {
+            if (!in_file) {
                 fprintf(stderr, "Can't read from file: %s\n", in_file_name);
                 exit(2);
             }
         } else if (out_file == stdout) {
             out_file_name = argv[arg];
             out_file = fopen(out_file_name, "w");
-            if(!out_file) {
+            if (!out_file) {
                 fprintf(stderr, "Can't write to file: %s\n", out_file_name);
                 fclose(in_file);
                 exit(2);
@@ -85,10 +85,10 @@ int main(int argc, char** argv) {
         } else {
             fprintf(stderr, "Too many arguments!\n");
             print_usage();
-            if(in_file != stdin) {
+            if (in_file != stdin) {
                 fclose(in_file);
             }
-            if(out_file != stdout) {
+            if (out_file != stdout) {
                 fclose(out_file);
             }
             exit(2);
@@ -97,11 +97,11 @@ int main(int argc, char** argv) {
 
     int failed = 0;
     int is_ascii = is_valid_ascii_stl(in_file);
-    if(!is_ascii && !is_valid_binary_stl(in_file)) {
+    if (!is_ascii && !is_valid_binary_stl(in_file)) {
         fprintf(stderr, "%s is not an STL file.\n", in_file_name);
         failed++;
     } else {
-        bounds b;
+        bounds_t b;
         get_bounds(in_file, &b, is_ascii);
         double x_centre = (b.min.x + b.max.x) / 2.0;
         double y_centre = (b.min.y + b.max.y) / 2.0;
@@ -115,28 +115,28 @@ int main(int argc, char** argv) {
         fseek(in_file, 0, SEEK_SET);
         char name[BUFFER_SIZE];
         memset(name, 0x00, BUFFER_SIZE);
-        facet triangle;
-        facet translated_triangle;
-        uint32_t triangle_count = 0;
+        facet_t facet;
+        facet_t translated_facet;
+        uint32_t facet_count = 0;
 
-        read_header(in_file, name, BUFFER_SIZE, &triangle_count, is_ascii);
-        write_header(out_file, name, triangle_count, is_ascii);
-        for(int i = 0; is_ascii || i < triangle_count; i++) {
-            if (read_facet(in_file, &triangle, is_ascii)) {
-                translated_triangle.normal = triangle.normal;
+        read_header(in_file, name, BUFFER_SIZE, &facet_count, is_ascii);
+        write_header(out_file, name, facet_count, is_ascii);
+        for (int i = 0; is_ascii || i < facet_count; i++) {
+            if (read_facet(in_file, &facet, is_ascii)) {
+                translated_facet.normal = facet.normal;
                 for (int j = 0; j < 3; j++) {
-                    vec_add(&triangle.vertices[j], &translation, &translated_triangle.vertices[j]); 
+                    vec_add(&facet.vertices[j], &translation, &translated_facet.vertices[j]); 
                 }
-                write_facet(out_file, &translated_triangle, is_ascii);
+                write_facet(out_file, &translated_facet, is_ascii);
                 if (is_ascii) {
-                    triangle_count++;
+                    facet_count++;
                 }
             } else {
                 break;
             }
         }
         read_final(in_file, is_ascii);
-        write_final(out_file, name, triangle_count, is_ascii);
+        write_final(out_file, name, facet_count, is_ascii);
     }
     if (in_file != stdin) {
         fclose(in_file);

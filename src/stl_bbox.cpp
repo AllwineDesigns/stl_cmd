@@ -36,25 +36,25 @@ void print_usage() {
 }
 
 int main(int argc, char** argv) {
-    if(argc == 1 || (argc >= 2 && strcmp(argv[1], "--help") == 0)) {
+    if (argc == 1 || (argc >= 2 && strcmp(argv[1], "--help") == 0)) {
         print_usage();
         exit(2);
     }
 
     int failed = 0;
-    for(int arg = 1; arg < argc; arg++) {
+    for (int arg = 1; arg < argc; arg++) {
         char *file_name = argv[arg];
         FILE* f = (strcmp(file_name, "-") == 0) ? stdin : fopen(file_name, "rb");
-        if(!f) {
+        if (!f) {
             fprintf(stderr, "Can't read file: %s\n", file_name);
             failed++;
         } else {
             int is_ascii = is_valid_ascii_stl(f);
-            if(!is_ascii && !is_valid_binary_stl(f)) {
+            if (!is_ascii && !is_valid_binary_stl(f)) {
                 fprintf(stderr, "%s is not an STL file.\n", file_name);
                 failed++;
             } else {
-                bounds b;
+                bounds_t b;
                 get_bounds(f, &b, is_ascii);
                 printf("File: %s Extents: (%f, %f, %f) - (%f, %f, %f)\n", file_name, b.min.x, b.min.y, b.min.z, b.max.x, b.max.y, b.max.z);
                 printf("File: %s Dimensions: (%f, %f, %f)\n", file_name, b.max.x-b.min.x, b.max.y-b.min.y, b.max.z-b.min.z);
