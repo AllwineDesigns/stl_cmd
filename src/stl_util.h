@@ -25,53 +25,14 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 #include <stdint.h>
 #include <sys/stat.h>
 #include <math.h>
+#include <string.h>
+#include <ctype.h>
 
 #ifndef M_PI
 #define M_PI 3.141592653589793
 #endif
 
 #define EPSILON 0.0001f
-
-inline int is_valid_binary_stl(FILE* f) {
-    if(!f) {
-      return 0;
-    }
-    long offset = ftell(f);
-    if(offset < 0) {
-        return 0;
-    }
-    int is_valid = 0;
-    struct stat st;
-    fstat(fileno(f), &st);
-
-    off_t size = st.st_size;
-    if(size >= 84) {
-        fseek(f, 80, SEEK_SET);
-
-        uint32_t num_tris;
-        size_t readBytes = fread(&num_tris, 4, 1, f);
-        uint64_t calced_size = 84+(4*12+2)*num_tris;
-        if(size == calced_size) {
-            is_valid = 1;
-        } else {
-//          fprintf(stderr, "    actual size: %10lld\n", size);
-//          fprintf(stderr, "  num triangles: %10d\n", num_tris);
-//          fprintf(stderr, "calculated size: %10lld\n", calced_size);
-        }
-    }
-    fseek(f, offset, SEEK_SET);
-    return is_valid;
-}
-
-inline int is_valid_binary_stl(char* filename) {
-    FILE *f;
-    f = fopen(filename, "rb");
-    int is_valid = is_valid_binary_stl(f);
-    if(f) {
-      fclose(f);
-    }
-    return is_valid;
-}
 
 typedef struct {
     float xx;
@@ -103,6 +64,264 @@ typedef struct {
     vec min;
     vec max;
 } bounds;
+
+typedef struct {
+    vec normal;
+    vec vertices[3];
+} facet;
+
+inline void write_header(FILE* f, const char* name, uint32_t facet_count, int is_ascii) {
+    if(is_ascii) {
+        if(name) {
+            fprintf(f, "solid %s\n", name);
+        } else {
+            fprintf(f, "solid \n");
+        }
+    } else {
+        char header[81];
+        memset(header, 0x00, 81);
+        if(name) {
+          strncpy(header, name, 80);
+        }
+        fwrite(header, 1, 80, f);
+        fwrite(&facet_count, 1, 4, f);
+    }
+}
+
+inline void write_final(FILE* f, const char* name, uint32_t facet_count, int is_ascii) {
+    if(is_ascii) {
+        fprintf(f, "endsolid %s\n", name);
+    } else {
+        long offset = ftell(f);
+        fseek(f, 80, SEEK_SET);
+        fwrite(&facet_count, 1, 4, f);
+        fseek(f, offset, SEEK_SET);
+    }
+}
+
+inline void write_facet(FILE* f, facet* facet, int is_ascii) {
+    if(is_ascii) {
+        fprintf(f, "facet normal %f %f %f\n", facet->normal.x, facet->normal.y, facet->normal.z);
+        fprintf(f, "  outer loop\n");
+        for(int i = 0; i < 3; i++) {
+            fprintf(f, "    vertex %f %f %f\n", facet->vertices[i].x, facet->vertices[i].y, facet->vertices[i].z);
+        }
+        fprintf(f, "  endloop\n");
+        fprintf(f, "endfacet\n");
+    } else {
+        fwrite(&(facet->normal), 1, 12, f);
+        for(int i = 0; i < 3; i++) {
+            fwrite(&(facet->vertices[i]), 1, 12, f);
+        }
+        uint16_t abc = 0;
+        fwrite(&abc, 1, 2, f);
+    }
+}
+
+inline int read_header(FILE* f, char* name, size_t name_length, uint32_t* facet_count, int is_ascii) {
+    if(is_ascii) {
+        char buffer[4096];
+        if(fgets(buffer, 4095, f)) {
+            if(strncmp(buffer, "solid ", 6) == 0) {
+                if(name) {
+                    strncpy(name, buffer + 6, name_length);
+                    if(strlen(buffer + 6) >= name_length) {
+                        name[name_length - 1] = 0;
+                    }
+                    for (int i = strlen(name) - 1; i >= 0; i--) {
+                        if (isspace(name[i])) {
+                            name[i] = 0;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                return 1;
+            }
+        }
+    } else {
+        char header[81];
+        memset(header, 0x00, 81);
+        if(fread(header, 1, 80, f) == 80) {
+            if(name) {
+                strncpy(name, header, name_length);
+                if(strlen(header) >= name_length) {
+                    name[name_length - 1] = 0;
+                }
+                for (int i = strlen(name) - 1; i >= 0; i--) {
+                    if (isspace(name[i])) {
+                        name[i] = 0;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            uint32_t tmp = 0;
+            if(fread(&tmp, 1, 4, f) == 4) {
+                if(facet_count) {
+                    *facet_count = tmp;
+                } 
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+inline int read_final(FILE* f, int is_ascii) {
+    if(is_ascii) {
+        char buffer[4096];
+        if(fgets(buffer, 4095, f)) {
+            if(strncmp(buffer, "endsolid", 8) == 0) {
+                return 1;
+            }
+        }
+    } else {
+        return 1;
+    }
+    return 0;
+}
+
+inline int read_facet(FILE* f, facet* facet, int is_ascii) {
+    if(!facet) {
+        return 0;
+    }
+    memset(facet, 0x00, sizeof(facet));
+    long offset = ftell(f);
+    if(offset < 0) {
+        return 0;
+    }
+    if(is_ascii) {
+        char buffer[4096];
+        if(!fgets(buffer, 4095, f)) {
+            return 0;
+        }
+        if(strncmp(buffer, "endsolid", 8) == 0) {
+            //We have reached the end, so seek back
+            fseek(f, offset, SEEK_SET);
+            return 0;
+        }
+        if(sscanf(buffer, " facet normal %f %f %f", &(facet->normal.x), &(facet->normal.y), &(facet->normal.z)) != 3) {
+            return 0;
+        }
+        if(!fgets(buffer, 4095, f)) {
+            return 0;
+        }
+        char arg1[256], arg2[256];
+        if(sscanf(buffer, " %s %s", arg1, arg2) != 2 || strcmp(arg1, "outer") != 0 || strcmp(arg2, "loop") != 0) {
+            return 0;
+        }
+        for(int i = 0; i < 3; i++) {
+            if(!fgets(buffer, 4095, f)) {
+                return 0;
+            }
+            if(sscanf(buffer, " vertex %f %f %f", &(facet->vertices[i].x), &(facet->vertices[i].y), &(facet->vertices[i].z)) != 3) {
+                return 0;
+            }
+        }
+        if(!fgets(buffer, 4095, f)) {
+            return 0;
+        }
+        if(sscanf(buffer, " %s", arg1) != 1 || strcmp(arg1, "endloop") != 0) {
+            return 0;
+        }
+        if(!fgets(buffer, 4095, f)) {
+            return 0;
+        }
+        if(sscanf(buffer, " %s", arg1) != 1 || strcmp(arg1, "endfacet") != 0) {
+            return 0;
+        }
+    } else {
+        if(fread(&(facet->normal), 1, 12, f) != 12) {
+            return 0;
+        }
+        facet->normal.w = 1.0;
+        for(int i = 0; i < 3; i++) {
+            if(fread(&(facet->vertices[i]), 1, 12, f) != 12) {
+                return 0;
+            }
+            facet->vertices[i].w = 1.0;
+        }
+        uint16_t abc = 0;
+        if(fread(&abc, 1, 2, f) != 2) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+inline int is_valid_ascii_stl(FILE* f) {
+    if(!f) {
+      return 0;
+    }
+    long offset = ftell(f);
+    if(offset < 0) {
+        return 0;
+    }
+    int is_valid = 0;
+    if(read_header(f, NULL, 0, NULL, 1)) {
+        facet triangle;
+        while(read_facet(f, &triangle, 1)) {
+            // Do nothing
+        }
+        if(read_final(f, 1)) {
+            is_valid = 1;
+        }
+    }
+    fseek(f, offset, SEEK_SET);
+    return is_valid;
+}
+
+inline int is_valid_ascii_stl(char* filename) {
+    FILE *f;
+    f = fopen(filename, "r");
+    int is_valid = is_valid_ascii_stl(f);
+    if(f) {
+      fclose(f);
+    }
+    return is_valid;
+}
+
+inline int is_valid_binary_stl(FILE* f) {
+    if(!f) {
+      return 0;
+    }
+    long offset = ftell(f);
+    if(offset < 0) {
+        return 0;
+    }
+    int is_valid = 0;
+    struct stat st;
+    fstat(fileno(f), &st);
+
+    off_t size = st.st_size;
+    if(size >= 84) {
+        fseek(f, 80, SEEK_SET);
+
+        uint32_t num_tris;
+        size_t readBytes = fread(&num_tris, 4, 1, f);
+        uint64_t calced_size = 84+(4*12+2)*num_tris;
+        if(size == calced_size) {
+            is_valid = 1;
+        } else {
+          //fprintf(stderr, "    actual size: %10lld\n", size);
+          //fprintf(stderr, "  num triangles: %10d\n", num_tris);
+          //fprintf(stderr, "calculated size: %10lld\n", calced_size);
+        }
+    }
+    fseek(f, offset, SEEK_SET);
+    return is_valid;
+}
+
+inline int is_valid_binary_stl(char* filename) {
+    FILE *f;
+    f = fopen(filename, "rb");
+    int is_valid = is_valid_binary_stl(f);
+    if(f) {
+      fclose(f);
+    }
+    return is_valid;
+}
 
 inline void mat_print(mat *m) {
     printf("%f %f %f %f\n", m->xx, m->xy, m->xz, m->xw);
@@ -712,6 +931,12 @@ inline void vec_cross(vec *a, vec *b, vec *out) {
     out->z = a->x*b->y-a->y*b->x;
 }
 
+inline void vec_add(vec *a, vec *b, vec *out) {
+    out->x = a->x+b->x;
+    out->y = a->y+b->y;
+    out->z = a->z+b->z;
+}
+
 inline void vec_sub(vec *a, vec *b, vec *out) {
     out->x = a->x-b->x;
     out->y = a->y-b->y;
@@ -795,40 +1020,35 @@ inline void write_quad(FILE *f,
     fwrite(&abc,1,  2, f);
 }
 
-inline void get_bounds(FILE *f, bounds* b) {
-    long offset = ftell(f);
-    fseek(f, 80, SEEK_SET);
-
-    uint32_t num_tris;
-    size_t readBytes = fread(&num_tris, 4, 1, f);
-
-    vec point;
-    point.w = 1;
-
-    for(int i = 0; i < num_tris; i++) {
-        fseek(f, 12, SEEK_CUR); // normal
-
-        for(int j = 0; j < 3; j++) {
-            readBytes = fread(&point, 1, 12,f);
-            if(i == 0 && j == 0) {
-                b->min.x = point.x;
-                b->min.y = point.y;
-                b->min.z = point.z;
-                b->max.x = point.x;
-                b->max.y = point.y;
-                b->max.z = point.z;
-            } else {
-                if(b->min.x > point.x) b->min.x = point.x;
-                if(b->min.y > point.y) b->min.y = point.y;
-                if(b->min.z > point.z) b->min.z = point.z;
-                if(b->max.x < point.x) b->max.x = point.x;
-                if(b->max.y < point.y) b->max.y = point.y;
-                if(b->max.z < point.z) b->max.z = point.z;
-            }
-        }
-        fseek(f, 2, SEEK_CUR);
+inline void get_facet_bounds(facet *triangle, bounds* b, int init) {
+    if (init) {
+        b->min = triangle->vertices[0];
+        b->max = triangle->vertices[0];
     }
-    fseek(f, offset, SEEK_SET);
+    for (int i = init ? 1 : 0; i < 3; i++) {
+        if(b->min.x > triangle->vertices[i].x) b->min.x = triangle->vertices[i].x;
+        if(b->min.y > triangle->vertices[i].y) b->min.y = triangle->vertices[i].y;
+        if(b->min.z > triangle->vertices[i].z) b->min.z = triangle->vertices[i].z;
+
+        if(b->max.x < triangle->vertices[i].x) b->max.x = triangle->vertices[i].x;
+        if(b->max.y < triangle->vertices[i].y) b->max.y = triangle->vertices[i].y;
+        if(b->max.z < triangle->vertices[i].z) b->max.z = triangle->vertices[i].z;
+    }
+}
+
+inline void get_bounds(FILE *f, bounds* b, int is_ascii) {
+    uint32_t triangle_count = 0;
+    memset(b, 0x00, sizeof(bounds));
+    read_header(f, NULL, 0, &triangle_count, is_ascii);
+    for(int i = 0; is_ascii || i < triangle_count; i++) {
+        facet triangle;
+        if (read_facet(f, &triangle, is_ascii)) {
+            get_facet_bounds(&triangle, b, i == 0);
+        } else {
+            break;
+        }
+    }
+    read_final(f, is_ascii);
 }
 
 #endif

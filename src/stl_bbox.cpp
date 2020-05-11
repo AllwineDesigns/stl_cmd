@@ -31,7 +31,8 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 void print_usage() {
     fprintf(stderr, "stl_bbox prints bounding box information about an STL file.\n\n");
     fprintf(stderr, "usage: stl_bbox <input file> [<input file> ...]\n");
-    fprintf(stderr, "    Prints bounding box information for the given binary STL file.\n");
+    fprintf(stderr, "    Prints bounding box information for the given STL file.\n");
+    fprintf(stderr, "    If '-' is given as a file name, stdin is read.\n");
 }
 
 int main(int argc, char** argv) {
@@ -43,20 +44,23 @@ int main(int argc, char** argv) {
     int failed = 0;
     for(int arg = 1; arg < argc; arg++) {
         char *file_name = argv[arg];
-        FILE *f = fopen(file_name, "rb");
+        FILE* f = (strcmp(file_name, "-") == 0) ? stdin : fopen(file_name, "rb");
         if(!f) {
             fprintf(stderr, "Can't read file: %s\n", file_name);
             failed++;
-        } else if(!is_valid_binary_stl(f)) {
-            fprintf(stderr, "%s is not a binary stl file.\n", file_name);
-            failed++;
         } else {
-            bounds b;
-            get_bounds(f, &b);
-            printf("File: %s Extents: (%f, %f, %f) - (%f, %f, %f)\n", file_name, b.min.x, b.min.y, b.min.z, b.max.x, b.max.y, b.max.z);
-            printf("File: %s Dimensions: (%f, %f, %f)\n", file_name, b.max.x-b.min.x, b.max.y-b.min.y, b.max.z-b.min.z);
+            int is_ascii = is_valid_ascii_stl(f);
+            if(!is_ascii && !is_valid_binary_stl(f)) {
+                fprintf(stderr, "%s is not an STL file.\n", file_name);
+                failed++;
+            } else {
+                bounds b;
+                get_bounds(f, &b, is_ascii);
+                printf("File: %s Extents: (%f, %f, %f) - (%f, %f, %f)\n", file_name, b.min.x, b.min.y, b.min.z, b.max.x, b.max.y, b.max.z);
+                printf("File: %s Dimensions: (%f, %f, %f)\n", file_name, b.max.x-b.min.x, b.max.y-b.min.y, b.max.z-b.min.z);
+            }
         }
-        if (f) {
+        if (f && f != stdin) {
             fclose(f);
         }
     }
