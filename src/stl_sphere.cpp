@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
 
     fwrite(&num_tris, 4, 1, outf);
 
-    uint16_t abc = 0; // attribute byte count 
+    uint16_t abc = 0; // attribute byte count
 
     for(int i = 0; i < s_segments; i++) {
       float ti = (float)i/s_segments;

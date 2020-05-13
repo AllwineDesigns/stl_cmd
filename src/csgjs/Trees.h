@@ -16,12 +16,12 @@ namespace csgjs {
       bool valid;
       bool removed;
 
-      void splitLeafByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes, 
+      void splitLeafByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes,
                                          std::vector<PolygonTreeNode*> &coplanarBackNodes,
                                          std::vector<PolygonTreeNode*> &frontNodes,
                                          std::vector<PolygonTreeNode*> &backNodes);
 
-      void splitPolygonByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes, 
+      void splitPolygonByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes,
                                                    std::vector<PolygonTreeNode*> &coplanarBackNodes,
                                                    std::vector<PolygonTreeNode*> &frontNodes,
                                                    std::vector<PolygonTreeNode*> &backNodes);
@@ -44,7 +44,7 @@ namespace csgjs {
       bool isRemoved() const;
       int countNodes() const;
       Polygon& getPolygon();
-      void splitByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes, 
+      void splitByPlane(const Plane &plane, std::vector<PolygonTreeNode*> &coplanarFrontNodes,
                                             std::vector<PolygonTreeNode*> &coplanarBackNodes,
                                             std::vector<PolygonTreeNode*> &frontNodes,
                                             std::vector<PolygonTreeNode*> &backNodes);

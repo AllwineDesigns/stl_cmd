@@ -131,7 +131,7 @@ int write_sliced_tri(FILE *f,
                       vec *p2,
                       vec *p3,
                       int rev,
-                      vec *p,  // point that lies in the slicing plane  
+                      vec *p,  // point that lies in the slicing plane
                       vec *n,   // normal of slicing plane, keep points in the direction of normal
                       vec *int1, // output, intersecting pt1, returned only if intersection occurs
                       vec *int2, // output, intersecting pt2, returned only if intersection occurs
@@ -148,15 +148,15 @@ int write_sliced_tri(FILE *f,
     state2 = point_state(p2,p,n);
     state3 = point_state(p3,p,n);
 
-    if((state1 == ABOVE || state1 == ON) && 
-       (state2 == ABOVE || state2 == ON) && 
+    if((state1 == ABOVE || state1 == ON) &&
+       (state2 == ABOVE || state2 == ON) &&
        (state3 == ABOVE || state3 == ON)) {
         // all points are above or on plane, write tri normally
         write_tri(f,p1,p2,p3,rev);
         *tris = 1;
         return 0;
     } else if((state1 == BELOW || state1 == ON) &&
-              (state2 == BELOW || state2 == ON) && 
+              (state2 == BELOW || state2 == ON) &&
               (state3 == BELOW || state3 == ON)) {
         // all points are below or on plane, cull entire tri
         *tris = 0;
@@ -293,7 +293,7 @@ int write_sliced_tri(FILE *f,
             return 1;
         }
 
-        if((state1 == ABOVE && state3 == ABOVE) || 
+        if((state1 == ABOVE && state3 == ABOVE) ||
             (state1 == BELOW && state3 == BELOW)) {
             vec tmp1,tmp2,tmp3;
             float r1,r2;
@@ -348,8 +348,8 @@ int main(int argc, char** argv) {
                             // TODO maybe add ability to add a head
     float outerDiameter = -1;
 
-    int segments = 72; // number of segments to approximate a circle, 
-                        // higher the number, higher the resolution 
+    int segments = 72; // number of segments to approximate a circle,
+                        // higher the number, higher the resolution
                         // (and file size) of the stl file
 
     while((c = getopt(argc, argv, "fP:D:a:h:s:o:")) != -1) {
@@ -411,8 +411,8 @@ int main(int argc, char** argv) {
     uint32_t num_tris = 0;
     fwrite(&num_tris, 4, 1, outf);
 
-    // ISO metric screw thread standard designates screw threads 
-    // as M followed by diameter D, a multiplication sign, and then 
+    // ISO metric screw thread standard designates screw threads
+    // as M followed by diameter D, a multiplication sign, and then
     // the pitch P (e.g. M8x1.25). Other standards designate standard
     // pitches for a given diameter (e.g. M8 means the same as M8x1.25).
     //
@@ -429,7 +429,7 @@ int main(int argc, char** argv) {
     // and H/4 from the tip and troughs
 
     float tantheta_2 = tan(theta/2);
-    float H = P/(2*tantheta_2); 
+    float H = P/(2*tantheta_2);
     float Htip = H/8;
     float Htrough = H/4;
     float Hdiff = H-Htip-Htrough;
@@ -445,10 +445,10 @@ int main(int argc, char** argv) {
 
 
     /*
-    // my ascii representation of image at 
+    // my ascii representation of image at
     // (http://en.wikipedia.org/wiki/ISO_metric_screw_thread)
     // with my own added variables
-    
+
                 |<--H->|
                 |      |
     |           |      |
@@ -466,7 +466,7 @@ int main(int argc, char** argv) {
     |    |       (   . pt2  ------
     |    |        ( /          ^
     |    v         / |         Pdiff
-    |-------------. pt1     ------ 
+    |-------------. pt1     ------
     |            /|  |
     |           . |  |
     |<---Dmin/2-->|  |
@@ -475,7 +475,7 @@ int main(int argc, char** argv) {
     |<-----D/2------>|
     */
 
-    vec pt1,pt2,pt3,pt4,pt5;      
+    vec pt1,pt2,pt3,pt4,pt5;
 
     pt1.x = Dmin_2;
     pt1.y = 0;
@@ -661,8 +661,8 @@ int main(int argc, char** argv) {
         vec_mat_mult(&pt2, &t, &p2);
         vec_mat_mult(&pt3, &t, &p3);
         vec_mat_mult(&pt4, &t, &p4);
-        vec_mat_mult(&pt1, &tc, &p5); // using pt1 with a transform of 1 
-                                      // full cycle around to avoid 
+        vec_mat_mult(&pt1, &tc, &p5); // using pt1 with a transform of 1
+                                      // full cycle around to avoid
                                       // floating point roundoff errors
 
         vec_mat_mult(&pt1, &tn, &p1n);
@@ -670,7 +670,7 @@ int main(int argc, char** argv) {
         vec_mat_mult(&pt3, &tn, &p3n);
         vec_mat_mult(&pt4, &tn, &p4n);
         vec_mat_mult(&pt1, &tnc, &p5n); // using pt1 with a transform of 1
-                                        // full cycle around to avoid 
+                                        // full cycle around to avoid
                                         // floating point roundoff errors
 
         if(i < 0) {

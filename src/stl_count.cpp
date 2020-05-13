@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
 
         uint32_t num_tris = *((uint32_t*)buff);
 
-        // read the rest of the file 
+        // read the rest of the file
         while(bights_read < num_tris*16 && getc(stdin) != EOF) {
             bights_read++;
         }

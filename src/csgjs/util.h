@@ -7,8 +7,8 @@
 
 namespace csgjs {
 
-  std::vector<Polygon> ReadSTLFile(const char* filename); 
-  void WriteSTLFile(const char* filename, const std::vector<Polygon> polygons); 
+  std::vector<Polygon> ReadSTLFile(const char* filename);
+  void WriteSTLFile(const char* filename, const std::vector<Polygon> polygons);
 
   unsigned long xorshf96(void);
   int fastRandom(int max);

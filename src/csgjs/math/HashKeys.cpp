@@ -19,11 +19,11 @@ namespace csgjs {
 
   LineKey::LineKey(const Line& l) {
     // A point and direction define a line. We want any equal Line to have the same hash value, so we need
-    // a consistent way to represent a line, such that any Line we pass to this constructor will yield the 
-    // same point and direction. We'll store the point that intersects the plane that intersects the origin, 
-    // whose normal is the same as the direction of the line. We'll compare the direction of the line to 
+    // a consistent way to represent a line, such that any Line we pass to this constructor will yield the
+    // same point and direction. We'll store the point that intersects the plane that intersects the origin,
+    // whose normal is the same as the direction of the line. We'll compare the direction of the line to
     // Vector(0,0,1), then Vector(0,1,0), then Vector(1,0,0) and pick the first one that isn't perpendicular
-    // to the line and set the direction so it's dot product with the chosen vector is positive. 
+    // to the line and set the direction so it's dot product with the chosen vector is positive.
 
     // We eliminate floating point errors by rounding to integers after scaling up by 1./EPS
     Vector3 d = l.direction.unit();
@@ -99,7 +99,7 @@ namespace csgjs {
     long int x = (long int)(std::round(v.x/(10*EPS)));
     long int y = (long int)(std::round(v.y/(10*EPS)));
     long int z = (long int)(std::round(v.z/(10*EPS)));
-    
+
 //    hash = (((std::hash<long int>()(x) ^ (std::hash<long int>()(y) << 1)) >> 1) ^ (std::hash<long int>()(z) << 1));
     hash = (std::hash<long int>()(x) ^ std::hash<long int>()(y) ^ std::hash<long int>()(z));
   }

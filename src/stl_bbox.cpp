@@ -30,72 +30,43 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 
 void print_usage() {
     fprintf(stderr, "stl_bbox prints bounding box information about an STL file.\n\n");
-    fprintf(stderr, "usage: stl_bbox <input file>\n");
-    fprintf(stderr, "    Prints bounding box information for the given binary STL file.\n");
+    fprintf(stderr, "usage: stl_bbox <input file> [<input file> ...]\n");
+    fprintf(stderr, "    Prints bounding box information for the given STL file.\n");
+    fprintf(stderr, "    If '-' is given as a file name, stdin is read.\n");
 }
 
 int main(int argc, char** argv) {
-    if(argc >= 2) {
-        if(strcmp(argv[1], "--help") == 0) {
-            print_usage();
-            exit(2);
-        }
-    }
-
-    char *file = argv[1];
-
-    if(!is_valid_binary_stl(file)) {
-        fprintf(stderr, "%s is not a binary stl file.\n", file);
+    if (argc == 1 || (argc >= 2 && strcmp(argv[1], "--help") == 0)) {
+        print_usage();
         exit(2);
     }
 
-    FILE *f;
-
-    f = fopen(file, "rb");
-    if(!f) {
-        fprintf(stderr, "Can't read file: %s\n", file);
-        exit(2);
-    }
-
-    fseek(f, 80, SEEK_SET);
-
-    uint32_t num_tris;
-    size_t readBytes = fread(&num_tris, 4, 1, f);
-
-    vec point;
-    point.w = 1;
-
-    vec min;
-    vec max;
-
-    for(int i = 0; i < num_tris; i++) {
-        fseek(f, 12, SEEK_CUR); // normal
-
-        for(int j = 0; j < 3; j++) {
-            readBytes = fread(&point, 1, 12,f);
-            if(i == 0 && j == 0) {
-                min.x = point.x;
-                min.y = point.y;
-                min.z = point.z;
-                max.x = point.x;
-                max.y = point.y;
-                max.z = point.z;
+    int failed = 0;
+    for (int arg = 1; arg < argc; arg++) {
+        char *file_name = argv[arg];
+        FILE* f = (strcmp(file_name, "-") == 0) ? stdin : fopen(file_name, "rb");
+        if (!f) {
+            fprintf(stderr, "Can't read file: %s\n", file_name);
+            failed++;
+        } else {
+            int is_ascii = is_valid_ascii_stl(f);
+            if (!is_ascii && !is_valid_binary_stl(f)) {
+                fprintf(stderr, "%s is not an STL file.\n", file_name);
+                failed++;
             } else {
-                if(min.x > point.x) min.x = point.x;
-                if(min.y > point.y) min.y = point.y;
-                if(min.z > point.z) min.z = point.z;
-                if(max.x < point.x) max.x = point.x;
-                if(max.y < point.y) max.y = point.y;
-                if(max.z < point.z) max.z = point.z;
+                bounds_t b;
+                get_bounds(f, &b, is_ascii);
+                printf("File: %s Extents: (%f, %f, %f) - (%f, %f, %f)\n", file_name, b.min.x, b.min.y, b.min.z, b.max.x, b.max.y, b.max.z);
+                printf("File: %s Dimensions: (%f, %f, %f)\n", file_name, b.max.x-b.min.x, b.max.y-b.min.y, b.max.z-b.min.z);
             }
         }
-        fseek(f, 2, SEEK_CUR);
+        if (f && f != stdin) {
+            fclose(f);
+        }
     }
-
-    fclose(f);
-
-    printf("Extents: (%f, %f, %f) - (%f, %f, %f)\n", min.x, min.y, min.z, max.x, max.y, max.z);
-    printf("Dimensions: (%f, %f, %f)\n", max.x-min.x, max.y-min.y, max.z-min.z);
-
+    if (failed) {
+        exit(2);
+    }
     return 0;
 }
+

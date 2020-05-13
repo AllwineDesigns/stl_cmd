@@ -158,7 +158,7 @@ int main(int argc, char** argv) {
 
     fseek(f, 80, SEEK_SET);
     uint32_t num_tris;
-    uint16_t abc = 0; // attribute byte count 
+    uint16_t abc = 0; // attribute byte count
 
     size_t readBytes = fread(&num_tris, 4, 1, f);
 
