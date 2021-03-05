@@ -300,7 +300,7 @@ inline int is_valid_binary_stl(FILE* f) {
 
         uint32_t num_tris;
         size_t readBytes = fread(&num_tris, 4, 1, f);
-        uint64_t calced_size = 84+(4*12+2)*num_tris;
+        uint64_t calced_size = 84+(4*12+2)*(uint64_t)num_tris;
         if (size == calced_size) {
             is_valid = 1;
         } else {
