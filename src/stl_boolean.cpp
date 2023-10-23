@@ -33,7 +33,7 @@ void print_usage() {
     fprintf(stderr, "    Performs a mesh CSG boolean operation on STL files A and B using BSP trees.\n"
                     "     -i - performs the intersection of A and B\n"
                     "     -u - performs the union of A and B (default)\n"
-                    "     -d - performs the difference of A and B\n");
+                    "     -d - performs 'A minus B', produces the volume present in A but not present in B\n");
 }
 
 int main(int argc, char **argv)
