@@ -32,7 +32,7 @@ Copyright 2014 by Freakin' Sweet Apps, LLC (stl_cmd@freakinsweetapps.com)
 void print_usage() {
     fprintf(stderr, "stl_zero centres an STL file.\n\n");
     fprintf(stderr, "usage: stl_zero [-base] [<input file> [<output file>] ]\n");
-    fprintf(stderr, "    Centre an STL file around the origin. ");
+    fprintf(stderr, "    Center an STL file around the origin. ");
     fprintf(stderr, "    If no input file is provided, data is read from stdin. If no output file is provided, data is sent to stdout. \n");
     fprintf(stderr, "        -base - If this is specified, set the lowest point in the design to z = 0. \n");
 }

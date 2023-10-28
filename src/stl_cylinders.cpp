@@ -30,10 +30,14 @@ Copyright 2020 by Allwine Designs (stl_cmd@allwinedesigns.com)
 #define BUFFER_SIZE 4096
 
 void print_usage() {
-    fprintf(stderr, "stl_cylinders outputs an STL file of a single cylinder.\n\n");
+    fprintf(stderr, "stl_cylinders outputs an STL file with multiple cylinders defined by a custom binary input file.\n\n");
     fprintf(stderr, "usage: stl_cylinders [ -r <radius> ] [ -s <segments> ] <input file> <output file>\n");
-    fprintf(stderr, "    Outputs an stl file of a cylinder with the provided radius, height and number of segments to approximate a circle.\n");
-    fprintf(stderr, "    If the radius or height are omitted, they default to 1. If segments is omitted, it defaults to 32. If no output file is provided, data is sent to stdout. \n");
+    fprintf(stderr, "    Outputs an stl file made up of N cylinders defined by start and end points in the input file each with the specified\n");
+    fprintf(stderr, "    radius and number of segments provided on the command line. The first 4 bytes of the input file represent how many \n");
+    fprintf(stderr, "    cylinders to generate, N. The rest of the input file defines start and end points that define a line segment of the\n");
+    fprintf(stderr, "    the central axis of the cylinder. Each segment is defined by 6, 4 byte floats. The first three are the X,Y,Z values\n");
+    fprintf(stderr, "    of the start point and the second three are the X,Y,Z values of the end point.\n");
+    fprintf(stderr, "    If the radius is omitted, it defaults to 1. If segments is omitted, it defaults to 32.\n");
 }
 
 void write_cylinder(FILE *outf, const vec &pt1, const vec &pt2, float radius, int segments) {
